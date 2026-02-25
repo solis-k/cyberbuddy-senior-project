@@ -27,7 +27,7 @@ Focus on defensive cybersecurity education.
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return "System is working"
 
 @app.route("/chat", methods=["POST"])
 def chat():
