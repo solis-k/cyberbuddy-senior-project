@@ -4,65 +4,76 @@
     <title>CyberBuddy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(to bottom right, #c7f0ff, #e0ffe6);
+            background: linear-gradient(135deg, #a0e7ff, #b4f8c8);
             margin: 0;
             padding: 0;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 750px;
             margin: 40px auto;
             background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
-            color: #2b7a78;
+            color: #2d6cdf;
+            font-weight: 600;
+        }
+
+        .tagline {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
         }
 
         .chatbox {
-            height: 350px;
+            height: 380px;
             overflow-y: auto;
-            background: #f4faff;
+            background: #f9fbff;
             padding: 15px;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 15px;
-        }
-
-        .message-user {
-            text-align: right;
-            margin: 10px 0;
-        }
-
-        .message-bot {
-            text-align: left;
-            margin: 10px 0;
         }
 
         .bubble {
             display: inline-block;
-            padding: 10px 15px;
+            padding: 12px 16px;
             border-radius: 20px;
             max-width: 75%;
+            margin: 8px 0;
+            animation: popIn 0.2s ease-out;
         }
 
-        .user-bubble {
-            background-color: #4dabf7;
+        .user {
+            text-align: right;
+        }
+
+        .user .bubble {
+            background: #4dabf7;
             color: white;
         }
 
-        .bot-bubble {
-            background-color: #d3f9d8;
-            color: #2b7a78;
+        .bot {
+            text-align: left;
+        }
+
+        .bot .bubble {
+            background: #d0f0fd;
+            color: #2d6cdf;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         .input-area {
@@ -72,48 +83,52 @@
 
         input {
             flex: 1;
-            padding: 10px;
-            border-radius: 15px;
-            border: 2px solid #2b7a78;
+            padding: 12px;
+            border-radius: 20px;
+            border: 2px solid #2d6cdf;
             font-size: 16px;
         }
 
         button {
-            padding: 10px 15px;
-            border-radius: 15px;
+            padding: 12px 18px;
+            border-radius: 20px;
             border: none;
-            background-color: #2b7a78;
+            background-color: #2d6cdf;
             color: white;
             font-size: 16px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         button:hover {
-            background-color: #205e5d;
+            background-color: #1f4fbf;
         }
 
-        .tagline {
-            text-align: center;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
+        .badge {
+            display: inline-block;
+            background: #ffd43b;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🛡 CyberBuddy</h1>
-    <div class="tagline">
-        Your friendly guide to staying safe online!
-    </div>
+    <h1>🤖 CyberBuddy</h1>
+    <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
 
     <div id="chatbox" class="chatbox"></div>
 
     <div class="input-area">
-        <input type="text" id="userInput" placeholder="Ask me about staying safe online! 😊">
+        <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
         <button onclick="sendMessage()">Send</button>
     </div>
+
+    <div class="badge">🟢 Safety Mode Active</div>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>

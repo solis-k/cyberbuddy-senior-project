@@ -7,13 +7,19 @@ async function sendMessage() {
     const chatbox = document.getElementById("chatbox");
 
     chatbox.innerHTML += `
-        <div class="message-user">
-            <div class="bubble user-bubble">${message}</div>
+        <div class="user">
+            <div class="bubble">${message}</div>
         </div>
     `;
 
     inputField.value = "";
     chatbox.scrollTop = chatbox.scrollHeight;
+
+    chatbox.innerHTML += `
+        <div class="bot" id="typing">
+            <div class="bubble">CyberBuddy is thinking... 🤔</div>
+        </div>
+    `;
 
     const response = await fetch("/chat", {
         method: "POST",
@@ -23,9 +29,11 @@ async function sendMessage() {
 
     const data = await response.json();
 
+    document.getElementById("typing").remove();
+
     chatbox.innerHTML += `
-        <div class="message-bot">
-            <div class="bubble bot-bubble">${data.response}</div>
+        <div class="bot">
+            <div class="bubble">${data.response}</div>
         </div>
     `;
 
