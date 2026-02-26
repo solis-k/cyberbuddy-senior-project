@@ -1,14 +1,106 @@
-button {
-    padding: 10px 14px;
-    border-radius: 15px;
-    border: none;
-    background-color: #2d6cdf;
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 5px 0;
-}
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a0e7ff, #b4f8c8);
+            margin: 0;
+            padding: 0;
+        }
 
-button:hover {
-    background-color: #1f4fbf;
-}
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d6cdf;
+            font-weight: 600;
+        }
+
+        .tagline {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .chatbox {
+            height: 380px;
+            overflow-y: auto;
+            background: #f9fbff;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .bubble {
+            display: inline-block;
+            padding: 12px 16px;
+            border-radius: 20px;
+            max-width: 75%;
+            margin: 8px 0;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .user {
+            text-align: right;
+        }
+
+        .user .bubble {
+            background: #4dabf7;
+            color: white;
+        }
+
+        .bot {
+            text-align: left;
+        }
+
+        .bot .bubble {
+            background: #d0f0fd;
+            color: #2d6cdf;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 20px;
+            border: 2px solid #2d6cdf;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border-radius: 20px;
+            border: none;
+            background-color: #2d6cdf;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #1f4fbf;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ffd43b;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
