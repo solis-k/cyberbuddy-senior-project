@@ -28,3 +28,20 @@ def save_chat(user_message, bot_response):
 
     conn.commit()
     conn.close()
+
+def find_exact_reply(user_message):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT bot_response
+        FROM chat_history
+        WHERE user_message = ?
+        ORDER BY id DESC
+        LIMIT 1
+    """, (user_message,))
+
+    row = cursor.fetchone()
+    conn.close()
+
+    return row[0] if row else None
