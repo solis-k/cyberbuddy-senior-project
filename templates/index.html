@@ -1,136 +1,380 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CyberBuddy</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CyberBuddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#5b47d6; --bg2:#9333ea; --bg3:#ec4899;
+      --card: rgba(255,255,255,.14);
+      --border: rgba(255,255,255,.25);
+      --text: rgba(255,255,255,.92);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Fredoka", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      overflow-x:hidden;
+    }
+    .bg{
+      position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;
+    }
+    .blob{ position:absolute; border-radius:999px; filter: blur(80px); opacity:.35; animation:pulse 5s ease-in-out infinite;}
+    .b1{ width:320px;height:320px; left:40px; top:70px; background:#fde047; }
+    .b2{ width:420px;height:420px; right:40px; bottom:70px; background:#22d3ee; animation-delay:1s;}
+    .b3{ width:220px;height:220px; right:25%; top:35%; background:#fb7185; animation-delay:2s;}
+    @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .float{
+      position:absolute; font-size:56px; opacity:.18; animation: float 4s ease-in-out infinite;
+    }
+    .f1{left:20%; top:20%;}
+    .f2{right:22%; top:28%; animation-delay:1.2s;}
+    .f3{left:28%; bottom:25%; animation-delay:.6s;}
+    @keyframes float{ 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-16px) rotate(10deg)} }
 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-    <link href="/static/style.css" rel="stylesheet">
+    .wrap{ max-width:1100px; margin:0 auto; padding: 28px 18px 60px; }
+    .hero{ text-align:center; padding: 22px 0 24px; }
+    .mascot{
+      width:132px; height:132px; border-radius:34px;
+      margin: 0 auto 14px;
+      background: linear-gradient(135deg,#22d3ee,#3b82f6,#9333ea);
+      border: 4px solid rgba(255,255,255,.35);
+      box-shadow: 0 25px 60px rgba(147,51,234,.45);
+      display:flex; align-items:center; justify-content:center; position:relative;
+      animation:bounce 2.1s ease-in-out infinite;
+    }
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .face{display:flex; flex-direction:column; align-items:center; gap:8px;}
+    .eyes{display:flex; gap:14px;}
+    .eye{width:28px;height:28px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .pupil{width:12px;height:12px;background:#0f172a;border-radius:50%; animation:look 2s ease-in-out infinite;}
+    @keyframes look{0%,100%{transform:translateX(0)}25%{transform:translateX(2px)}75%{transform:translateX(-2px)}}
+    .smile{width:44px;height:22px;border-bottom:4px solid #fff;border-radius:0 0 999px 999px;}
+    .badge{
+      position:absolute; right:-10px; top:-10px;
+      width:40px; height:40px; border-radius:14px;
+      background:#fde047; color:#111827;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; box-shadow:0 12px 25px rgba(0,0,0,.25);
+      animation: wiggle 1.8s ease-in-out infinite;
+    }
+    @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(10deg)}}
 
-    <style>
-        body {
-            font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(135deg, #a0e7ff, #b4f8c8);
-            margin: 0;
-            padding: 0;
-        }
+    h1{
+      margin: 8px 0 4px;
+      font-size: clamp(44px, 6vw, 78px);
+      line-height:1;
+      font-weight: 800;
+      background: linear-gradient(90deg,#fde047,#ffffff,#67e8f9);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+    .sub{ font-size: clamp(18px, 2vw, 28px); font-weight:700; opacity:.95; margin: 4px 0 10px;}
+    .desc{ max-width:720px; margin: 0 auto 18px; font-size:18px; opacity:.85; line-height:1.5;}
+    .cta{
+      border:0; cursor:pointer; font-family:inherit;
+      padding: 16px 22px; border-radius:999px;
+      background: linear-gradient(90deg,#fbbf24,#f97316,#ec4899);
+      color:#fff; font-weight:800; font-size:18px;
+      border: 4px solid rgba(255,255,255,.25);
+      box-shadow: 0 22px 40px rgba(249,115,22,.45);
+      transition: transform .15s ease;
+    }
+    .cta:hover{ transform: scale(1.04); }
+    .grid{
+      margin-top:22px;
+      display:grid; grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+    .card{
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 45px rgba(0,0,0,.12);
+    }
+    .card h3{ margin:8px 0 6px; font-size:18px;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px; border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.25);
+      font-weight:700;
+    }
 
-        .container {
-            max-width: 750px;
-            margin: 40px auto;
-            background: white;
-            border-radius: 25px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #2d6cdf;
-            font-weight: 600;
-        }
-
-        .tagline {
-            text-align: center;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        .chatbox {
-            height: 380px;
-            overflow-y: auto;
-            background: #f9fbff;
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-        }
-
-        .bubble {
-            display: inline-block;
-            padding: 12px 16px;
-            border-radius: 20px;
-            max-width: 75%;
-            margin: 8px 0;
-            animation: popIn 0.2s ease-out;
-        }
-
-        .user {
-            text-align: right;
-        }
-
-        .user .bubble {
-            background: #4dabf7;
-            color: white;
-        }
-
-        .bot {
-            text-align: left;
-        }
-
-        .bot .bubble {
-            background: #d0f0fd;
-            color: #2d6cdf;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        input {
-            flex: 1;
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #2d6cdf;
-            font-size: 16px;
-        }
-
-        button {
-            padding: 12px 18px;
-            border-radius: 20px;
-            border: none;
-            background-color: #2d6cdf;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background-color: #1f4fbf;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #ffd43b;
-            color: #333;
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-    </style>
+    /* Modal Chat */
+    .overlay{
+      position:fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center;
+      padding:16px; z-index:50;
+    }
+    .overlay.active{ display:flex; }
+    .modal{
+      width:min(560px, 100%); height: 640px;
+      background:#0f172a; border-radius:26px; border:1px solid rgba(148,163,184,.35);
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      overflow:hidden; display:flex; flex-direction:column;
+    }
+    .mhead{
+      padding:14px 14px;
+      background: linear-gradient(90deg,#9333ea,#ec4899);
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom: 1px solid rgba(255,255,255,.15);
+    }
+    .leftHead{ display:flex; align-items:center; gap:10px; }
+    .mini{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg,#22d3ee,#9333ea);
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(255,255,255,.22);
+    }
+    .miniFace{display:flex;flex-direction:column;align-items:center;gap:3px}
+    .miniEyes{display:flex;gap:8px}
+    .miniEyes span{width:7px;height:7px;background:#fff;border-radius:50%}
+    .miniSmile{width:18px;height:10px;border-bottom:2px solid #fff;border-radius:0 0 999px 999px}
+    .status{font-size:12px; opacity:.9}
+    .close{
+      border:0; background: rgba(255,255,255,.18); color:#fff; cursor:pointer;
+      width:40px;height:40px;border-radius:14px; font-size:18px; font-weight:800;
+    }
+    .msgs{ flex:1; padding:14px; overflow:auto; background: radial-gradient(circle at top, rgba(99,102,241,.18), transparent 60%);}
+    .row{ display:flex; margin:10px 0; gap:10px; }
+    .row.user{ justify-content:flex-end; }
+    .bubble{
+      max-width: 78%;
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height:1.45;
+      white-space:pre-wrap;
+      font-size:14.5px;
+    }
+    .bubble.bot{ background:#1e293b; color:#e2e8f0; border-top-left-radius:8px; }
+    .bubble.user{ background: linear-gradient(135deg,#6366f1,#9333ea); color:#fff; border-top-right-radius:8px; }
+    .quick{
+      display:flex; flex-wrap:wrap; gap:8px;
+      padding: 0 14px 10px;
+      background:#0f172a;
+    }
+    .qbtn{
+      border:1px solid rgba(99,102,241,.35);
+      background:#111c33;
+      color:#c7d2fe;
+      padding:8px 10px;
+      border-radius:999px;
+      font-family:inherit;
+      font-weight:700;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .qbtn:hover{ background: rgba(99,102,241,.18); }
+    .minput{
+      display:flex; gap:10px; padding:12px 14px; border-top:1px solid rgba(148,163,184,.22);
+      background: rgba(15,23,42,.92);
+    }
+    input{
+      flex:1; border-radius: 14px; border:1px solid rgba(148,163,184,.35);
+      background:#0b1222; color:#fff; padding:12px 12px; font-family:inherit; font-size:14px;
+      outline:none;
+    }
+    input:focus{ border-color: rgba(99,102,241,.7); }
+    .send{
+      border:0; cursor:pointer; font-family:inherit;
+      padding: 12px 14px; border-radius: 14px;
+      background: linear-gradient(90deg,#06b6d4,#6366f1);
+      color:#fff; font-weight:900;
+      min-width: 92px;
+    }
+    @media (max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 <body>
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="float f1">⭐</div>
+    <div class="float f2">🚀</div>
+    <div class="float f3">🛡️</div>
+  </div>
 
-<div class="container">
-    <h1>🤖 CyberBuddy</h1>
-    <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
+  <div class="wrap">
+    <section class="hero">
+      <div class="mascot" aria-hidden="true">
+        <div class="badge">⚡</div>
+        <div class="face">
+          <div class="eyes">
+            <div class="eye"><div class="pupil"></div></div>
+            <div class="eye"><div class="pupil"></div></div>
+          </div>
+          <div class="smile"></div>
+        </div>
+      </div>
 
-    <div id="chatbox" class="chatbox"></div>
+      <h1>CyberBuddy</h1>
+      <div class="sub">Your AI Bestie for Online Safety! 🎉</div>
+      <div class="desc">
+        Learn to spot scams, protect passwords, and stay safe online through quick chats and kid-friendly tips.
+      </div>
+      <button class="cta" id="openChatBtn">🚀 Let’s Chat!</button>
 
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
-        <button onclick="sendMessage()">Send</button>
+      <div class="grid" style="margin-top:22px;">
+        <div class="card">
+          <div class="pill">💬 Chat Like a Friend</div>
+          <h3>Ask anything</h3>
+          <div style="opacity:.85;">Simple answers with real-life examples (games, school, texting).</div>
+        </div>
+        <div class="card">
+          <div class="pill">🔐 Password Boss</div>
+          <h3>Build stronger habits</h3>
+          <div style="opacity:.85;">Practice safe choices without scary “tech talk.”</div>
+        </div>
+        <div class="card">
+          <div class="pill">🎣 Scam Spotter</div>
+          <h3>Spot the red flags</h3>
+          <div style="opacity:.85;">Learn how to handle weird links, DMs, and popups.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CHAT MODAL -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="CyberBuddy Chat">
+      <div class="mhead">
+        <div class="leftHead">
+          <div class="mini">
+            <div class="miniFace">
+              <div class="miniEyes"><span></span><span></span></div>
+              <div class="miniSmile"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:900; font-size:16px;">CyberBuddy</div>
+            <div class="status">online • ready to help 🎮</div>
+          </div>
+        </div>
+        <button class="close" id="closeBtn">×</button>
+      </div>
+
+      <div class="msgs" id="msgs"></div>
+
+      <div class="quick" id="quick">
+        <button class="qbtn">What is phishing?</button>
+        <button class="qbtn">Help me make a strong password</button>
+        <button class="qbtn">What should I do about a weird DM?</button>
+        <button class="qbtn">Is public Wi-Fi safe?</button>
+      </div>
+
+      <div class="minput">
+        <input id="input" type="text" placeholder="Ask CyberBuddy anything..." autocomplete="off">
+        <button class="send" id="sendBtn">Send</button>
+      </div>
     </div>
-</div>
+  </div>
 
-<script src="/static/script.js"></script>
+  <script>
+    const API_URL = "http://localhost:5000";
+    let isTyping = false;
 
+    const overlay = document.getElementById("overlay");
+    const openChatBtn = document.getElementById("openChatBtn");
+    const closeBtn = document.getElementById("closeBtn");
+    const msgs = document.getElementById("msgs");
+    const input = document.getElementById("input");
+    const sendBtn = document.getElementById("sendBtn");
+    const quick = document.getElementById("quick");
+
+    function openChat(){
+      overlay.classList.add("active");
+      setTimeout(() => input.focus(), 50);
+      if (!msgs.dataset.started){
+        addBot("Hey! I’m CyberBuddy 👋 Ask me anything about staying safe online.");
+        msgs.dataset.started = "1";
+      }
+    }
+    function closeChat(){ overlay.classList.remove("active"); }
+
+    function addRow(role, text){
+      const row = document.createElement("div");
+      row.className = "row " + role;
+      const bubble = document.createElement("div");
+      bubble.className = "bubble " + role;
+      bubble.textContent = text;
+      row.appendChild(bubble);
+      msgs.appendChild(row);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    function addBot(text){ addRow("bot", text); }
+    function addUser(text){ addRow("user", text); }
+
+    function showTyping(){
+      const row = document.createElement("div");
+      row.className = "row bot";
+      row.id = "typingRow";
+      const bubble = document.createElement("div");
+      bubble.className = "bubble bot";
+      bubble.textContent = "Typing…";
+      row.appendChild(bubble);
+      msgs.appendChild(row);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    function hideTyping(){
+      const t = document.getElementById("typingRow");
+      if (t) t.remove();
+    }
+
+    async function sendMessage(text){
+      const message = (text ?? input.value).trim();
+      if (!message || isTyping) return;
+
+      addUser(message);
+      input.value = "";
+      input.disabled = true;
+      sendBtn.disabled = true;
+      isTyping = true;
+
+      showTyping();
+
+      try{
+        const res = await fetch(API_URL + "/chat", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ message })
+        });
+        if (!res.ok) throw new Error("Request failed");
+        const data = await res.json();
+        hideTyping();
+        addBot(data.response || "Hmm… can you try that again?");
+      }catch(e){
+        console.error(e);
+        hideTyping();
+        addBot("Oops 😅 I couldn’t reach my server. Is Flask running?");
+      }finally{
+        isTyping = false;
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    }
+
+    openChatBtn.addEventListener("click", openChat);
+    closeBtn.addEventListener("click", closeChat);
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeChat(); });
+
+    sendBtn.addEventListener("click", () => sendMessage());
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
+    });
+
+    quick.addEventListener("click", (e) => {
+      if (e.target.classList.contains("qbtn")) sendMessage(e.target.textContent);
+    });
+  </script>
 </body>
 </html>
