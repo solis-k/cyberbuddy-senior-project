@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 from models.db import init_db, save_chat, find_exact_reply
 
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -34,6 +33,10 @@ Focus on defensive cybersecurity education.
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/quiz")
+def quiz():
+    return render_template("quiz.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
