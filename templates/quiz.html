@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CyberBuddy Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container quiz-container">
+    <h1>🧠 CyberBuddy Quiz</h1>
+    <div class="tagline">Test your cyber safety skills and become a digital hero! 🏆</div>
+
+    <div class="top-buttons">
+        <a href="/" class="nav-btn">Chat</a>
+        <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
+    </div>
+
+    <div class="quiz-status">
+        <span id="questionCounter">Question 1 of 10</span>
+        <span id="scoreDisplay">Score: 0</span>
+    </div>
+
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <div class="quiz-box">
+        <h2 id="quizQuestion">Loading question...</h2>
+        <div id="quizOptions" class="quiz-options"></div>
+        <div id="quizFeedback" class="quiz-feedback"></div>
+    </div>
+</div>
+
+<script src="/static/quiz.js"></script>
+
+</body>
+</html>
