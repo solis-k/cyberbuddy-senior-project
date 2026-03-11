@@ -1,4 +1,6 @@
 flask
 openai
 python-dotenv
+flask-login
+flask-bcrypt
 gunicorn
