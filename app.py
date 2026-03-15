@@ -6,14 +6,17 @@ from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
 from flask_login import LoginManager
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
 
 load_dotenv()
 
 app = Flask(__name__)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 init_db()
 
