@@ -9,10 +9,12 @@
 </head>
 <body>
 
+<button id="loginBtn">Login</button>
+
 <div class="container">
     <h1>🤖 CyberBuddy</h1>
     <div class="top-buttons">
-        <a href="/" class="nav-btn">Chat</a>
+        <a href="/" class="nav-btn">Chatgit</a>
         <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
     </div>
     <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
@@ -23,6 +25,22 @@
         <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
         <button onclick="sendMessage()">Send</button>
     </div>
+</div>
+
+<div id="loginModal" class="modal">
+
+  <div class="modal-content">
+    <span id="closeLogin">&times;</span>
+
+    <h2>Login</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="loginUser()">Login</button>
+
+  </div>
+
 </div>
 
 <script src="/static/script.js"></script>

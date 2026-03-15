@@ -4,6 +4,11 @@ import os
 from dotenv import load_dotenv
 from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
+from flask_login import LoginManager
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 
 load_dotenv()
 
@@ -30,6 +35,41 @@ You provide guidance on:
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
 """
+from flask_login import login_user
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT id, username, password, role FROM users WHERE username=?",
+            (username,)
+        )
+
+        user = cursor.fetchone()
+        conn.close()
+
+        if user and bcrypt.check_password_hash(user[2], password):
+            login_user(User(user[0], user[1], user[3]))
+            return redirect("/")
+
+    return render_template("login.html")
+
+from flask_login import logout_user
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
 
 @app.route("/")
 def home():
@@ -66,6 +106,25 @@ def chat():
     save_chat(user_message, bot_reply)
 
     return jsonify({"response": bot_reply})
+
+@login_manager.user_loader
+def load_user(user_id):
+    import sqlite3
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, username, role FROM users WHERE id=?", (user_id,))
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if user:
+        return User(user[0], user[1], user[2])
+
+    return None
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
