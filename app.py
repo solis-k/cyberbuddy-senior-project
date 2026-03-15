@@ -137,3 +137,33 @@ class User(UserMixin):
         self.id = id
         self.username = username
         self.role = role
+
+@app.route("/register", methods=["POST"])
+def register():
+
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (username, hashed_password)
+        )
+
+        conn.commit()
+
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({"success": False, "error": "Username already exists"})
+
+    conn.close()
+
+    login_user(User(user_id, username))
+    return jsonify({"success": True})

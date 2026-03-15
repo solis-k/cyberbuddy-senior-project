@@ -77,3 +77,28 @@ async function loginUser() {
         alert("Login failed");
     }
 }
+
+async function registerUser() {
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+
+    const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        alert("Account created! You can now log in.");
+    } else {
+        alert(data.error);
+    }
+}
