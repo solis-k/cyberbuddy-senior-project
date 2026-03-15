@@ -3,6 +3,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 from models.db import init_db, save_chat, find_exact_reply
+from flask_login import UserMixin
 
 load_dotenv()
 
@@ -68,3 +69,9 @@ def chat():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+class User(UserMixin):
+    def __init__(self, id, username, role="user"):
+        self.id = id
+        self.username = username
+        self.role = role
