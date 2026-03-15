@@ -39,3 +39,41 @@ async function sendMessage() {
 
     chatbox.scrollTop = chatbox.scrollHeight;
 }
+
+const modal = document.getElementById("loginModal");
+const loginBtn = document.getElementById("loginBtn");
+const closeBtn = document.getElementById("closeLogin");
+
+loginBtn.onclick = () => {
+    modal.style.display = "block";
+};
+
+closeBtn.onclick = () => {
+    modal.style.display = "none";
+};
+
+async function loginUser() {
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        alert("Login successful!");
+        location.reload();
+    } else {
+        alert("Login failed");
+    }
+}
