@@ -105,7 +105,7 @@ async function registerUser() {
 
 async function registerUser() {
 
-    console.log("register clicked");
+    console.log("register clicked", username);
 
     const username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
