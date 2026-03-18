@@ -104,5 +104,33 @@ async function registerUser() {
 }
 
 async function registerUser() {
-    console.log("REGISTER CLICKED");  // 👈 important
+
+    console.log("REGISTER CLICKED");
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+
+    console.log("sending:", username, password);
+
+    const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
+
+    console.log("response received");
+
+    const data = await response.json();
+    console.log("server response:", data);
+
+    if (data.success) {
+        alert("Account created!");
+    } else {
+        alert(data.error || "Registration failed");
+    }
 }
