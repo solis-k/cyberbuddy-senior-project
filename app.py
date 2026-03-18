@@ -167,3 +167,32 @@ def register():
 
     login_user(User(user_id, username))
     return jsonify({"success": True})
+
+async function registerUser() {
+
+    console.log("register clicked");
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+
+    const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.success) {
+        alert("Account created!");
+    } else {
+        alert(data.error);
+    }
+}
