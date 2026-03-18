@@ -6,6 +6,7 @@ from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
 from flask_login import LoginManager
 from flask_login import login_user
+import sqlite3
 
 load_dotenv()
 
