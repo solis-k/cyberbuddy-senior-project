@@ -1,4 +1,4 @@
-sync function sendMessage() {
+async function sendMessage() {
     const inputField = document.getElementById("userInput");
     const message = inputField.value;
 
