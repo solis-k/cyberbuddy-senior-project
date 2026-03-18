@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
 from flask_login import LoginManager
+from flask_login import login_user
+from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt(app)
 
 load_dotenv()
 
@@ -38,10 +41,6 @@ You provide guidance on:
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
 """
-from flask_login import login_user
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt(app)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -140,30 +139,30 @@ class User(UserMixin):
 
 @app.route("/register", methods=["POST"])
 def register():
-
-    data = request.get_json()
-
-    username = data["username"]
-    password = data["password"]
-
-    hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
     try:
+        print("REGISTER HIT")
+
+        data = request.get_json()
+        print("DATA:", data)
+
+        username = data["username"]
+        password = data["password"]
+
+        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+
         cursor.execute(
             "INSERT INTO users (username, password) VALUES (?, ?)",
             (username, hashed_password)
         )
 
         conn.commit()
-
-    except sqlite3.IntegrityError:
         conn.close()
-        return jsonify({"success": False, "error": "Username already exists"})
 
-    conn.close()
+        return jsonify({"success": True})
 
-    login_user(User(user_id, username))
-    return jsonify({"success": True})
+    except Exception as e:
+        print("ERROR:", str(e))  # 👈 THIS IS KEY
+        return jsonify({"success": False, "error": str(e)})
