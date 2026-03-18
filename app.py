@@ -6,9 +6,6 @@ from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
 from flask_login import LoginManager
 from flask_login import login_user
-from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt(app)
 
 load_dotenv()
 
@@ -41,6 +38,10 @@ You provide guidance on:
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
 """
+
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
