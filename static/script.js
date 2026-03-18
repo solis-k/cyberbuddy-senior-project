@@ -102,3 +102,32 @@ async function registerUser() {
         alert(data.error);
     }
 }
+
+async function registerUser() {
+
+    console.log("register clicked");
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+
+    const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.success) {
+        alert("Account created!");
+    } else {
+        alert(data.error);
+    }
+}
