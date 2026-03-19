@@ -145,7 +145,9 @@ async function registerUser() {
 window.onload = () => {
     const username = document.body.dataset.username;
 
-    if (username) {
+    console.log("USERNAME FROM HTML:", username);
+
+    if (username && username !== "None") {
         const chatBox = document.getElementById("chat-box");
 
         chatBox.innerHTML += `

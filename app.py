@@ -98,8 +98,10 @@ def logout():
 def home():
     if current_user.is_authenticated:
         username = current_user.username
+        print("LOGGED IN USER:", username)  # 👈 debug
     else:
         username = None
+        print("NOT LOGGED IN")
 
     return render_template("index.html", username=username)
 
