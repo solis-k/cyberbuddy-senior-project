@@ -96,7 +96,12 @@ def logout():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        username = current_user.username
+    else:
+        username = None
+
+    return render_template("index.html", username=username)
 
 @app.route("/quiz")
 def quiz():
@@ -187,12 +192,3 @@ def register():
     except Exception as e:
         print("ERROR:", str(e))  # 👈 THIS IS KEY
         return jsonify({"success": False, "error": str(e)})
-    
-@app.route("/")
-def home():
-    if current_user.is_authenticated:
-        username = current_user.username
-    else:
-        username = None
-
-    return render_template("index.html", username=username)
