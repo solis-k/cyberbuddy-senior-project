@@ -84,6 +84,7 @@ async function loginUser() {
         alert("Login failed");
     }
 }
+
 async function registerUser() {
 
     const username = document.getElementById("registerUsername").value;
@@ -140,3 +141,17 @@ async function registerUser() {
         alert(data.error || "Registration failed");
     }
 }
+
+window.onload = () => {
+    const username = document.body.dataset.username;
+
+    if (username) {
+        const chatBox = document.getElementById("chat-box");
+
+        chatBox.innerHTML += `
+            <div class="bot-message">
+                👋 Hi ${username}! I'm CyberBuddy. Ready to stay safe online today?
+            </div>
+        `;
+    }
+};

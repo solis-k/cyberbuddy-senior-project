@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
 </head>
-<body>
+<body data-username="{{ username }}">
 
 
 <div class="container">
@@ -47,6 +47,14 @@
     <button onclick="registerUser()">Create Account</button>
 
   </div>
+
+ <div id="chat-box">
+    {% if username %}
+        <div class="bot-message">
+            👋 Hi {{ username }}! I'm CyberBuddy. Ready to learn some cybersecurity today?
+        </div>
+    {% endif %}
+</div>
 
 </div>
 
