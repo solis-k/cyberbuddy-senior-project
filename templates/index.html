@@ -22,7 +22,15 @@
     <div id="chatbox" class="chatbox">
         {% if name %}
             <div class="bot-message">
-                👋 Hi {{ name }}! I'm CyberBuddy. Ready to stay safe online today?
+                👋 Hi {{ name }}! What would you like to learn today?
+            </div>
+
+            <div class="topic-buttons">
+                <button onclick="selectTopic('phishing')">🎣 Phishing</button>
+                <button onclick="selectTopic('passwords')">🔑 Password Safety</button>
+                <button onclick="selectTopic('browsing')">🌐 Safe Browsing</button>
+                <button onclick="selectTopic('social')">📱 Social Media Safety</button>
+                <button onclick="enableFreeChat()">💬 Ask My Own Question</button>
             </div>
         {% endif %}
     </div>

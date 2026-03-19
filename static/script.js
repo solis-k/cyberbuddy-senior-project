@@ -1,6 +1,7 @@
-async function sendMessage() {
+async function sendMessage(customMessage = null) {
     const inputField = document.getElementById("userInput");
-    const message = inputField.value;
+
+    const message = customMessage || inputField.value;
 
     if (!message) return;
 
@@ -159,5 +160,27 @@ window.onload = () => {
         `;
     }
 };
+
+function selectTopic(topic) {
+    let message = "";
+
+    if (topic === "phishing") {
+        message = "Teach me about phishing scams";
+    } else if (topic === "passwords") {
+        message = "How do I create strong passwords?";
+    } else if (topic === "browsing") {
+        message = "How can I browse the internet safely?";
+    } else if (topic === "social") {
+        message = "How can I stay safe on social media?";
+    }
+
+    sendMessage(message);
+}
+
+function enableFreeChat() {
+    const input = document.getElementById("userInput");
+    input.placeholder = "Ask anything about cybersecurity! 😊";
+    input.focus();
+}
 
 
