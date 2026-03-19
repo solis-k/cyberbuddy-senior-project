@@ -6,6 +6,7 @@ from models.db import init_db, save_chat, find_exact_reply
 from flask_login import UserMixin
 from flask_login import LoginManager
 from flask_login import login_user
+from flask_login import logout_user
 import sqlite3
 
 load_dotenv()
@@ -48,11 +49,10 @@ bcrypt = Bcrypt(app)
 def login():
     try:
         data = request.get_json()
-
-        print("DATA RECEIVED:", data)  # 👈 debug
+        print("DATA:", data)
 
         if not data:
-            return jsonify({"success": False, "error": "No JSON received"}), 400
+            return jsonify({"success": False, "error": "No data"}), 400
 
         username = data.get("username")
         password = data.get("password")
@@ -68,19 +68,24 @@ def login():
         user = cursor.fetchone()
         conn.close()
 
-        print("USER:", user)  # 👈 debug
+        print("USER:", user)
 
-        if user and bcrypt.check_password_hash(user[2], password):
+        if not user:
+            return jsonify({"success": False, "error": "User not found"})
+
+        stored_password = user[2]
+
+        # 🔑 IMPORTANT FIX
+        if bcrypt.check_password_hash(stored_password, password):
             login_user(User(user[0], user[1], user[3]))
             return jsonify({"success": True})
 
-        return jsonify({"success": False, "error": "Invalid credentials"})
+        return jsonify({"success": False, "error": "Wrong password"})
 
     except Exception as e:
         print("LOGIN ERROR:", e)
         return jsonify({"success": False, "error": str(e)}), 500
 
-from flask_login import logout_user
 
 @app.route("/logout")
 def logout():
