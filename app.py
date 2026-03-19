@@ -1,15 +1,18 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 from openai import OpenAI
 import os
+import sqlite3
 from dotenv import load_dotenv
-from models.db import init_db, save_chat, find_exact_reply
-from flask_login import UserMixin
-from flask_login import LoginManager
+from models.db import init_db, save_chat, find_exact_reply, get_recent_chats, save_quiz_result
+from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+from flask_bcrypt import Bcrypt
 
 
 load_dotenv()
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = "cyberbuddy-dev-key"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -82,31 +85,54 @@ def home():
 def quiz():
     return render_template("quiz.html")
 
+@app.route("/save_quiz_result", methods=["POST"])
+@login_required
+def save_quiz():
+    data = request.get_json()
+
+    score = data.get("score")
+    total_questions = data.get("total_questions")
+
+    if score is None or total_questions is None:
+        return jsonify({"success": False, "error": "Missing score data"}), 400
+
+    save_quiz_result(current_user.id, score, total_questions)
+
+    return jsonify({"success": True})
+
 @app.route("/chat", methods=["POST"])
+@login_required
 def chat():
     user_message = (request.json.get("message") or "").strip()
 
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
 
-    # 1️⃣ Check database first
-    old_reply = find_exact_reply(user_message)
+    user_id = current_user.id
+
+    old_reply = find_exact_reply(user_id, user_message)
     if old_reply:
         return jsonify({"response": old_reply})
 
-    # 2️⃣ Otherwise call OpenAI
+    recent_chats = get_recent_chats(user_id, limit=5)
+
+    conversation_context = []
+    for old_user_message, old_bot_response in reversed(recent_chats):
+        conversation_context.append({"role": "user", "content": old_user_message})
+        conversation_context.append({"role": "assistant", "content": old_bot_response})
+
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
+            *conversation_context,
             {"role": "user", "content": user_message}
         ]
     )
 
     bot_reply = response.choices[0].message.content
 
-    # 3️⃣ Save new answer
-    save_chat(user_message, bot_reply)
+    save_chat(user_id, user_message, bot_reply)
 
     return jsonify({"response": bot_reply})
 
@@ -140,7 +166,6 @@ class User(UserMixin):
 
 @app.route("/register", methods=["POST"])
 def register():
-
     data = request.get_json()
 
     username = data["username"]
@@ -158,6 +183,7 @@ def register():
         )
 
         conn.commit()
+        user_id = cursor.lastrowid
 
     except sqlite3.IntegrityError:
         conn.close()
@@ -167,3 +193,6 @@ def register():
 
     login_user(User(user_id, username))
     return jsonify({"success": True})
+
+if __name__ == "__main__":
+    app.run(debug=True)
