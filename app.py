@@ -143,13 +143,16 @@ def load_user(user_id):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, username, role FROM users WHERE id=?", (user_id,))
-    user = cursor.fetchone()
+    cursor.execute(
+        "SELECT id, username, name, role FROM users WHERE id=?",
+        (user_id,)
+    )
 
+    user = cursor.fetchone()
     conn.close()
 
     if user:
-        return User(user[0], user[1], user[2])
+        return User(user[0], user[1], user[2], user[3])  # ✅ FIXED
 
     return None
 
