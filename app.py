@@ -188,7 +188,7 @@ def register():
         print("ERROR:", str(e))  # 👈 THIS IS KEY
         return jsonify({"success": False, "error": str(e)})
     
-    @app.route("/")
+@app.route("/")
 def home():
     if current_user.is_authenticated:
         username = current_user.username
