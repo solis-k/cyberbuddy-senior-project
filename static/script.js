@@ -54,8 +54,12 @@ closeBtn.onclick = () => {
 
 async function loginUser() {
 
+    console.log("LOGIN CLICKED");
+
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+
+    console.log("sending login:", username, password);
 
     const response = await fetch("/login", {
         method: "POST",
@@ -68,7 +72,10 @@ async function loginUser() {
         })
     });
 
+    console.log("response received");
+
     const data = await response.json();
+    console.log("server response:", data);
 
     if (data.success) {
         alert("Login successful!");
@@ -77,7 +84,6 @@ async function loginUser() {
         alert("Login failed");
     }
 }
-
 async function registerUser() {
 
     const username = document.getElementById("registerUsername").value;
