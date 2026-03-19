@@ -176,6 +176,8 @@ function selectTopic(topic) {
         message = "Teach me about AI safety";
     } else if (topic === "viruses") {
         message = "Teach me about viruses and malware";
+    } else if (topic === "data") {
+        message = "Teach me how to keep my data safe online"
     }
 
     sendMessage(message);
