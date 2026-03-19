@@ -41,6 +41,9 @@ You provide guidance on:
 
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
+
+Try to give short responses with follow up questions to keep the user interested.
+Always prioritize the knowledge base to avoid guessing.
 """
 
 from flask_bcrypt import Bcrypt
@@ -207,20 +210,27 @@ def register():
 def get_relevant_knowledge(user_message):
     user_message = user_message.lower()
 
-    if any(word in user_message for word in ["phish", "email scam", "fake email"]):
+    if any(word in user_message for word in ["phish", "email scam", "fake email", "scam"]):
         file = "knowledge_base/phishing.txt"
 
     elif any(word in user_message for word in ["password", "login", "credentials"]):
-        file = "knowledge_base/nist.txt"
+        file = "knowledge_base/passwords.txt"
 
-    elif any(word in user_message for word in ["social", "instagram", "snapchat"]):
+    elif any(word in user_message for word in ["browse", "website", "link", "internet"]):
+        file = "knowledge_base/browsing.txt"
+
+    elif any(word in user_message for word in ["social", "instagram", "snapchat", "tiktok"]):
         file = "knowledge_base/social.txt"
 
     elif any(word in user_message for word in ["virus", "malware", "download"]):
-        file = "knowledge_base/owasp.txt"
+        file = "knowledge_base/malware.txt"
+
+    elif any(word in user_message for word in ["privacy", "data", "information"]):
+        file = "knowledge_base/privacy.txt"
 
     else:
-        file = "knowledge_base/owasp.txt"
+        # fallback (general cybersecurity info)
+        file = "knowledge_base/browsing.txt"
 
     with open(file, "r", encoding="utf-8") as f:
         return f.read()
