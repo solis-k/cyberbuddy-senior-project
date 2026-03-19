@@ -26,11 +26,12 @@
             </div>
 
             <div class="topic-buttons">
-                <button onclick="selectTopic('phishing')">🎣 Phishing</button>
-                <button onclick="selectTopic('passwords')">🔑 Password Safety</button>
-                <button onclick="selectTopic('browsing')">🌐 Safe Browsing</button>
-                <button onclick="selectTopic('social')">📱 Social Media Safety</button>
-                <button onclick="enableFreeChat()">💬 Ask My Own Question</button>
+                <button onclick="selectTopic('phishing')" data-tooltip="Phishing tricks people. Watch out for fake emails!">🎣 Phishing</button>
+                <button onclick="selectTopic('passwords')" data-tooltip="Keep your passwords strong and unique!">🔑 Password Safety</button>
+                <button onclick="selectTopic('viruses')" data-tooltip="Protect yourself from malicious software!">🦠 Virus Protection</button>
+                <button onclick="selectTopic('ai')" data-tooltip="AI helps computers think and make decisions, like CyberBuddy!">📱 AI</button>
+                <button onclick="selectTopic('data')" data-tooltip="Protect your personal information!">🔒 Data Privacy</button>
+                <button onclick="enableFreeChat()" data-tooltip="Ask me anything about online safety!">💬 Ask My Own Question</button>
             </div>
         {% endif %}
     </div>
