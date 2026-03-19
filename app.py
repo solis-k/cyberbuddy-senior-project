@@ -183,7 +183,7 @@ def register():
         cursor = conn.cursor()
 
         cursor.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
+            "INSERT INTO users (username, password, name) VALUES (?, ?, ?)",
             (username, hashed_password, name)
         )
 
