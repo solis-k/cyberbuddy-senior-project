@@ -19,7 +19,13 @@
     </div>
     <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
 
-    <div id="chatbox" class="chatbox"></div>
+    <div id="chatbox" class="chatbox">
+        {% if username %}
+            <div class="bot-message">
+                👋 Hi {{ username }}! I'm CyberBuddy. Ready to stay safe online today?
+            </div>
+        {% endif %}
+    </div>
 
     <div class="input-area">
         <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
@@ -47,14 +53,6 @@
     <button onclick="registerUser()">Create Account</button>
 
   </div>
-
- <div id="chat-box">
-    {% if username %}
-        <div class="bot-message">
-            👋 Hi {{ username }}! I'm CyberBuddy. Ready to learn some cybersecurity today?
-        </div>
-    {% endif %}
-</div>
 
 </div>
 
