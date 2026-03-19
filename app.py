@@ -115,16 +115,21 @@ def chat():
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
 
-    # 1️⃣ Check database first
+    #Check database first
     old_reply = find_exact_reply(user_message)
     if old_reply:
         return jsonify({"response": old_reply})
 
-    # 2️⃣ Otherwise call OpenAI
+    #load from knowledge base
+    knowledge = get_relevant_knowledge(user_message)
+
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT + "\n\nUse this knowledge:\n" + knowledge
+            },
             {"role": "user", "content": user_message}
         ]
     )
@@ -198,3 +203,24 @@ def register():
     except Exception as e:
         print("ERROR:", str(e))  # 👈 THIS IS KEY
         return jsonify({"success": False, "error": str(e)})
+
+def get_relevant_knowledge(user_message):
+    user_message = user_message.lower()
+
+    if any(word in user_message for word in ["phish", "email scam", "fake email"]):
+        file = "knowledge_base/phishing.txt"
+
+    elif any(word in user_message for word in ["password", "login", "credentials"]):
+        file = "knowledge_base/nist.txt"
+
+    elif any(word in user_message for word in ["social", "instagram", "snapchat"]):
+        file = "knowledge_base/social.txt"
+
+    elif any(word in user_message for word in ["virus", "malware", "download"]):
+        file = "knowledge_base/owasp.txt"
+
+    else:
+        file = "knowledge_base/owasp.txt"
+
+    with open(file, "r", encoding="utf-8") as f:
+        return f.read()
