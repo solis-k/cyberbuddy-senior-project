@@ -172,6 +172,8 @@ function selectTopic(topic) {
         message = "How can I browse the internet safely?";
     } else if (topic === "social") {
         message = "How can I stay safe on social media?";
+    } else if (topic === "ai") {
+        sendMessage("Teach me about AI safety");
     }
 
     sendMessage(message);

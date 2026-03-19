@@ -228,8 +228,10 @@ def get_relevant_knowledge(user_message):
     elif any(word in user_message for word in ["privacy", "data", "information"]):
         file = "knowledge_base/privacy.txt"
 
+    elif any(word in user_message for word in ["ai", "artificial intelligence", "chatbot", "robot"]):
+        file = "knowledge_base/ai.txt"
+
     else:
-        # fallback (general cybersecurity info)
         file = "knowledge_base/browsing.txt"
 
     with open(file, "r", encoding="utf-8") as f:
