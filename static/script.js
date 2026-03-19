@@ -116,17 +116,19 @@ async function registerUser() {
 
     const username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
+    const name = document.getElementById("registerName").value;
 
     console.log("sending:", username, password);
 
     const response = await fetch("/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: name,
+        username: username,
+        password: password
         })
     });
 
@@ -157,3 +159,5 @@ window.onload = () => {
         `;
     }
 };
+
+

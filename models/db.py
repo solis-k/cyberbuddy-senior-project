@@ -19,8 +19,9 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
+        name TEXT,
         role TEXT DEFAULT 'user'
-    )
+    );
     """)
 
     conn.commit()

@@ -20,9 +20,9 @@
     <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
 
     <div id="chatbox" class="chatbox">
-        {% if username %}
+        {% if name %}
             <div class="bot-message">
-                👋 Hi {{ username }}! I'm CyberBuddy. Ready to stay safe online today?
+                👋 Hi {{ name }}! I'm CyberBuddy. Ready to stay safe online today?
             </div>
         {% endif %}
     </div>
@@ -47,6 +47,7 @@
 
     <h2>Create Account</h2>
 
+    <input id="registerName" placeholder="Your Name">
     <input id="registerUsername" placeholder="Username">
     <input id="registerPassword" type="password" placeholder="Password">
 

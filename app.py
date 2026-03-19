@@ -56,6 +56,7 @@ def login():
         if not data:
             return jsonify({"success": False, "error": "No data"}), 400
 
+        name = data.get("name")
         username = data.get("username")
         password = data.get("password")
 
@@ -63,7 +64,7 @@ def login():
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT id, username, password, role FROM users WHERE username=?",
+            "SELECT id, username, password, name, role FROM users WHERE username=?",
             (username,)
         )
 
@@ -79,7 +80,7 @@ def login():
 
         # 🔑 IMPORTANT FIX
         if bcrypt.check_password_hash(stored_password, password):
-            login_user(User(user[0], user[1], user[3]))
+            login_user(User(user[0], user[1], user[3], user[4]))
             return jsonify({"success": True})
 
         return jsonify({"success": False, "error": "Wrong password"})
@@ -97,13 +98,11 @@ def logout():
 @app.route("/")
 def home():
     if current_user.is_authenticated:
-        username = current_user.username
-        print("LOGGED IN USER:", username)  # 👈 debug
+        name = current_user.name
     else:
-        username = None
-        print("NOT LOGGED IN")
+        name = None
 
-    return render_template("index.html", username=username)
+    return render_template("index.html", name=name)
 
 @app.route("/quiz")
 def quiz():
@@ -160,9 +159,10 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 class User(UserMixin):
-    def __init__(self, id, username, role="user"):
+    def __init__(self, id, username, name, role):
         self.id = id
         self.username = username
+        self.name = name
         self.role = role
 
 @app.route("/register", methods=["POST"])
@@ -173,6 +173,7 @@ def register():
         data = request.get_json()
         print("DATA:", data)
 
+        name = data["name"]
         username = data["username"]
         password = data["password"]
 
@@ -183,7 +184,7 @@ def register():
 
         cursor.execute(
             "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, hashed_password)
+            (username, hashed_password, name)
         )
 
         conn.commit()
