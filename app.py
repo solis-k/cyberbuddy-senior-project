@@ -44,12 +44,18 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["POST"])
 def login():
+    try:
+        data = request.get_json()
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        print("DATA RECEIVED:", data)  # 👈 debug
+
+        if not data:
+            return jsonify({"success": False, "error": "No JSON received"}), 400
+
+        username = data.get("username")
+        password = data.get("password")
 
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
@@ -62,11 +68,17 @@ def login():
         user = cursor.fetchone()
         conn.close()
 
+        print("USER:", user)  # 👈 debug
+
         if user and bcrypt.check_password_hash(user[2], password):
             login_user(User(user[0], user[1], user[3]))
-            return redirect("/")
+            return jsonify({"success": True})
 
-    return render_template("login.html")
+        return jsonify({"success": False, "error": "Invalid credentials"})
+
+    except Exception as e:
+        print("LOGIN ERROR:", e)
+        return jsonify({"success": False, "error": str(e)}), 500
 
 from flask_login import logout_user
 
