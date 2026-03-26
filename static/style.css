@@ -256,16 +256,42 @@ button:hover {
   border-radius: 10px;
 }
 
-.topic-buttons {
-    margin-top: 10px;
+.topic-buttons button {
+    position: relative;
+    margin: 5px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #13dc48;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
 }
 
-.topic-buttons button {
-    margin: 5px;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
+.topic-buttons button:hover {
+    background-color: #d0f0ff;
+}
+
+/* Tooltip */
+.topic-buttons button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    font-size: 0.85rem;
+    z-index: 10;
+}
+
+/* Show tooltip on hover */
+.topic-buttons button:hover::after {
+    opacity: 1;
 }

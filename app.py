@@ -23,6 +23,10 @@ init_db()
 SYSTEM_PROMPT = """
 You are CyberBuddy, a fun and friendly digital buddy who helps middle school students stay safe online.
 
+Try to give short responses with follow up questions to keep the user interested.
+Always prioritize the knowledge base.
+If user asks non cybersecurity question don't answer.
+
 You explain things in simple language.
 You are positive, encouraging, and supportive.
 You use light emojis when appropriate.
@@ -171,7 +175,6 @@ def save_quiz():
 
 
 @app.route("/chat", methods=["POST"])
-@login_required
 def chat():
     user_message = (request.json.get("message") or "").strip()
 
@@ -180,10 +183,12 @@ def chat():
 
     user_id = current_user.id
 
+    # Check database first
     old_reply = find_exact_reply(user_id, user_message)
     if old_reply:
         return jsonify({"response": old_reply})
 
+    # Load chat history
     recent_chats = get_recent_chats(user_id, limit=5)
 
     conversation_context = []
@@ -191,10 +196,16 @@ def chat():
         conversation_context.append({"role": "user", "content": old_user_message})
         conversation_context.append({"role": "assistant", "content": old_bot_response})
 
+    # ✅ ADD THIS
+    knowledge = get_relevant_knowledge(user_message)
+
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT + "\n\nUse this knowledge:\n" + knowledge
+            },
             *conversation_context,
             {"role": "user", "content": user_message}
         ]
@@ -249,6 +260,39 @@ def register():
 
     login_user(User(user_id, username, name, "user"))
     return jsonify({"success": True})
+  
+def get_relevant_knowledge(user_message):
+    user_message = user_message.lower()
+
+    if any(word in user_message for word in ["phish", "email scam", "fake email", "scam"]):
+        file = "knowledge_base/phishing.txt"
+
+    elif any(word in user_message for word in ["password", "login", "credentials"]):
+        file = "knowledge_base/passwords.txt"
+
+    elif any(word in user_message for word in ["browse", "website", "link", "internet"]):
+        file = "knowledge_base/browsing.txt"
+
+    elif any(word in user_message for word in ["social", "instagram", "snapchat", "tiktok"]):
+        file = "knowledge_base/social.txt"
+
+    elif any(word in user_message for word in ["virus", "malware", "download"]):
+        file = "knowledge_base/malware.txt"
+
+    elif any(word in user_message for word in ["privacy", "data", "information"]):
+        file = "knowledge_base/privacy.txt"
+
+    elif any(word in user_message for word in ["ai", "artificial intelligence", "chatbot", "robot"]):
+        file = "knowledge_base/ai.txt"
+
+    else:
+        file = "knowledge_base/browsing.txt"
+
+    try:
+        with open(file, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "No additional knowledge available."
 
 
 if __name__ == "__main__":

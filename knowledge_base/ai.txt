@@ -1,0 +1,24 @@
+Topic: Artificial Intelligence (AI) Safety
+
+What is AI:
+Artificial Intelligence (AI) is technology that can think, learn, and respond like a human. Examples include chatbots, voice assistants, and recommendation systems.
+
+How AI is used:
+- Chatbots (like CyberBuddy)
+- Voice assistants (Siri, Alexa)
+- Social media feeds
+- Video and music recommendations
+
+Risks of AI:
+- AI can give incorrect or misleading information
+- Deepfakes can create fake images or videos
+- AI may be used in scams or phishing messages
+
+How to stay safe:
+- Do not trust everything AI says without checking
+- Verify important information with trusted sources
+- Be cautious of AI-generated messages or videos
+- Never share personal information with unknown AI tools
+
+Remember:
+AI is helpful, but you should always think critically and stay cautious.
