@@ -255,3 +255,17 @@ button:hover {
   width: 300px;
   border-radius: 10px;
 }
+
+.topic-buttons {
+    margin-top: 10px;
+}
+
+.topic-buttons button {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}

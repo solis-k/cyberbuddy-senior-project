@@ -7,19 +7,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
 </head>
-<body>
+<body data-username="{{ username }}">
 
 
 <div class="container">
     <h1>🤖 CyberBuddy</h1>
     <div class="top-buttons">
-        <button id="loginBtn">Login</button>
+        <button id="loginBtn" class="nav-btn">Login</button>
         <a href="/" class="nav-btn">Chat</a>
         <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
     </div>
     <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
 
-    <div id="chatbox" class="chatbox"></div>
+    <div id="chatbox" class="chatbox">
+        {% if name %}
+            <div class="bot-message">
+                👋 Hi {{ name }}! What would you like to learn today?
+            </div>
+
+            <div class="topic-buttons">
+                <button onclick="selectTopic('phishing')">🎣 Phishing</button>
+                <button onclick="selectTopic('passwords')">🔑 Password Safety</button>
+                <button onclick="selectTopic('browsing')">🌐 Safe Browsing</button>
+                <button onclick="selectTopic('social')">📱 Social Media Safety</button>
+                <button onclick="enableFreeChat()">💬 Ask My Own Question</button>
+            </div>
+        {% endif %}
+    </div>
 
     <div class="input-area">
         <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
@@ -41,6 +55,7 @@
 
     <h2>Create Account</h2>
 
+    <input id="registerName" placeholder="Your Name">
     <input id="registerUsername" placeholder="Username">
     <input id="registerPassword" type="password" placeholder="Password">
 

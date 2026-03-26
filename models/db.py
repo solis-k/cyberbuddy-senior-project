@@ -1,10 +1,10 @@
 import sqlite3
 
+
 def init_db():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    # Users table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,19 +15,15 @@ def init_db():
     )
     """)
 
-    # Chat history linked to user
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS chat_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
         user_message TEXT,
         bot_response TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
-    # Quiz results table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS quiz_results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,6 +36,22 @@ def init_db():
     """)
 
     conn.commit()
+    conn.close()
+
+    _ensure_chat_history_user_id()
+
+
+def _ensure_chat_history_user_id():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("PRAGMA table_info(chat_history)")
+    columns = [row[1] for row in cursor.fetchall()]
+
+    if "user_id" not in columns:
+        cursor.execute("ALTER TABLE chat_history ADD COLUMN user_id INTEGER")
+        conn.commit()
+
     conn.close()
 
 
@@ -74,17 +86,17 @@ def get_recent_chats(user_id, limit=5):
     return rows
 
 
-def find_exact_reply(user_message):
+def find_exact_reply(user_id, user_message):
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT bot_response
-        FROM chat_history
-        WHERE user_message = ?
-        ORDER BY id DESC
-        LIMIT 1
-    """, (user_message,))
+    SELECT bot_response
+    FROM chat_history
+    WHERE user_id = ? AND user_message = ?
+    ORDER BY id DESC
+    LIMIT 1
+    """, (user_id, user_message))
 
     row = cursor.fetchone()
     conn.close()

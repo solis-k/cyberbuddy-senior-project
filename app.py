@@ -7,19 +7,16 @@ from models.db import init_db, save_chat, find_exact_reply, get_recent_chats, sa
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 from flask_bcrypt import Bcrypt
 
-
 load_dotenv()
 
 app = Flask(__name__)
-
-app.config["SECRET_KEY"] = "cyberbuddy-dev-key"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev_secret")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 
 init_db()
 
@@ -41,49 +38,122 @@ You provide guidance on:
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
 """
-from flask_login import login_user
-from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+class User(UserMixin):
+    def __init__(self, id, username, name="", role="user"):
+        self.id = id
+        self.username = username
+        self.name = name
+        self.role = role
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT id, username, name, role FROM users WHERE id=?",
+            (user_id,)
+        )
+        user = cursor.fetchone()
+    except sqlite3.OperationalError:
+        cursor.execute(
+            "SELECT id, username, role FROM users WHERE id=?",
+            (user_id,)
+        )
+        user = cursor.fetchone()
+        conn.close()
+
+        if user:
+            return User(user[0], user[1], "", user[2])
+        return None
+
+    conn.close()
+
+    if user:
+        return User(user[0], user[1], user[2], user[3])
+
+    return None
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({"success": False, "error": "No data"}), 400
+
+        username = data.get("username")
+        password = data.get("password")
 
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
 
-        cursor.execute(
-            "SELECT id, username, password, role FROM users WHERE username=?",
-            (username,)
-        )
+        try:
+            cursor.execute(
+                "SELECT id, username, password, name, role FROM users WHERE username=?",
+                (username,)
+            )
+            user = cursor.fetchone()
+            conn.close()
 
-        user = cursor.fetchone()
-        conn.close()
+            if not user:
+                return jsonify({"success": False, "error": "User not found"})
 
-        if user and bcrypt.check_password_hash(user[2], password):
-            login_user(User(user[0], user[1], user[3]))
-            return redirect("/")
+            stored_password = user[2]
 
-    return render_template("login.html")
+            if bcrypt.check_password_hash(stored_password, password):
+                login_user(User(user[0], user[1], user[3], user[4]))
+                return jsonify({"success": True})
 
-from flask_login import logout_user
+            return jsonify({"success": False, "error": "Wrong password"})
+
+        except sqlite3.OperationalError:
+            cursor.execute(
+                "SELECT id, username, password, role FROM users WHERE username=?",
+                (username,)
+            )
+            user = cursor.fetchone()
+            conn.close()
+
+            if not user:
+                return jsonify({"success": False, "error": "User not found"})
+
+            stored_password = user[2]
+
+            if bcrypt.check_password_hash(stored_password, password):
+                login_user(User(user[0], user[1], "", user[3]))
+                return jsonify({"success": True})
+
+            return jsonify({"success": False, "error": "Wrong password"})
+
+    except Exception as e:
+        print("LOGIN ERROR:", e)
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect("/")
 
+
 @app.route("/")
 def home():
-    return render_template("index.html")
+    name = current_user.name if current_user.is_authenticated else None
+    return render_template("index.html", name=name)
+
 
 @app.route("/quiz")
 def quiz():
     return render_template("quiz.html")
+
 
 @app.route("/save_quiz_result", methods=["POST"])
 @login_required
@@ -97,8 +167,8 @@ def save_quiz():
         return jsonify({"success": False, "error": "Missing score data"}), 400
 
     save_quiz_result(current_user.id, score, total_questions)
-
     return jsonify({"success": True})
+
 
 @app.route("/chat", methods=["POST"])
 @login_required
@@ -136,40 +206,20 @@ def chat():
 
     return jsonify({"response": bot_reply})
 
-@login_manager.user_loader
-def load_user(user_id):
-    import sqlite3
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT id, username, role FROM users WHERE id=?", (user_id,))
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if user:
-        return User(user[0], user[1], user[2])
-
-    return None
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-class User(UserMixin):
-    def __init__(self, id, username, role="user"):
-        self.id = id
-        self.username = username
-        self.role = role
 
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
 
-    username = data["username"]
-    password = data["password"]
+    if not data:
+        return jsonify({"success": False, "error": "No data"}), 400
+
+    username = data.get("username")
+    password = data.get("password")
+    name = data.get("name", "")
+
+    if not username or not password:
+        return jsonify({"success": False, "error": "Username and password are required"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
@@ -177,10 +227,16 @@ def register():
     cursor = conn.cursor()
 
     try:
-        cursor.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, hashed_password)
-        )
+        try:
+            cursor.execute(
+                "INSERT INTO users (username, password, name) VALUES (?, ?, ?)",
+                (username, hashed_password, name)
+            )
+        except sqlite3.OperationalError:
+            cursor.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hashed_password)
+            )
 
         conn.commit()
         user_id = cursor.lastrowid
@@ -191,8 +247,9 @@ def register():
 
     conn.close()
 
-    login_user(User(user_id, username))
+    login_user(User(user_id, username, name, "user"))
     return jsonify({"success": True})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

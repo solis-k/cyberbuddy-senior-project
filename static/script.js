@@ -1,6 +1,7 @@
-async function sendMessage() {
+async function sendMessage(customMessage = null) {
     const inputField = document.getElementById("userInput");
-    const message = inputField.value;
+
+    const message = customMessage || inputField.value;
 
     if (!message) return;
 
@@ -54,8 +55,12 @@ closeBtn.onclick = () => {
 
 async function loginUser() {
 
+    console.log("LOGIN CLICKED");
+
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+
+    console.log("sending login:", username, password);
 
     const response = await fetch("/login", {
         method: "POST",
@@ -68,7 +73,10 @@ async function loginUser() {
         })
     });
 
+    console.log("response received");
+
     const data = await response.json();
+    console.log("server response:", data);
 
     if (data.success) {
         alert("Login successful!");
@@ -102,3 +110,77 @@ async function registerUser() {
         alert(data.error);
     }
 }
+
+async function registerUser() {
+
+    console.log("REGISTER CLICKED");
+
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+    const name = document.getElementById("registerName").value;
+
+    console.log("sending:", username, password);
+
+    const response = await fetch("/register", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: name,
+        username: username,
+        password: password
+        })
+    });
+
+    console.log("response received");
+
+    const data = await response.json();
+    console.log("server response:", data);
+
+    if (data.success) {
+        alert("Account created!");
+    } else {
+        alert(data.error || "Registration failed");
+    }
+}
+
+window.onload = () => {
+    const username = document.body.dataset.username;
+
+    console.log("USERNAME FROM HTML:", username);
+
+    if (username && username !== "None") {
+        const chatBox = document.getElementById("chat-box");
+
+        chatBox.innerHTML += `
+            <div class="bot-message">
+                👋 Hi ${username}! I'm CyberBuddy. Ready to stay safe online today?
+            </div>
+        `;
+    }
+};
+
+function selectTopic(topic) {
+    let message = "";
+
+    if (topic === "phishing") {
+        message = "Teach me about phishing scams";
+    } else if (topic === "passwords") {
+        message = "How do I create strong passwords?";
+    } else if (topic === "browsing") {
+        message = "How can I browse the internet safely?";
+    } else if (topic === "social") {
+        message = "How can I stay safe on social media?";
+    }
+
+    sendMessage(message);
+}
+
+function enableFreeChat() {
+    const input = document.getElementById("userInput");
+    input.placeholder = "Ask anything about cybersecurity! 😊";
+    input.focus();
+}
+
+
