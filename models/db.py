@@ -48,6 +48,27 @@ def init_db():
     )
     """)
 
+    admin_username = os.getenv("ADMIN_USERNAME")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+    admin_name = os.getenv("ADMIN_NAME", "Admin")
+
+    if admin_username and admin_password:
+        cursor.execute("SELECT * FROM users WHERE username=?", (admin_username,))
+        existing_admin = cursor.fetchone()
+
+        if not existing_admin:
+            from flask_bcrypt import Bcrypt
+            bcrypt = Bcrypt()
+
+            hashed_pw = bcrypt.generate_password_hash(admin_password).decode("utf-8")
+
+            cursor.execute("""
+                INSERT INTO users (username, password, name, role)
+                VALUES (?, ?, ?, ?)
+            """, (admin_username, hashed_pw, admin_name, "admin"))
+
+            print("✅ Admin account created")
+
     conn.commit()
     conn.close()
 
