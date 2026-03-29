@@ -295,3 +295,12 @@ button:hover {
 .topic-buttons button:hover::after {
     opacity: 1;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
