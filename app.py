@@ -181,24 +181,31 @@ def chat():
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
 
-    user_id = current_user.id
+    # Handle logged-in vs guest users
+    if current_user.is_authenticated:
+        user_id = current_user.id
 
-    # Check database first
-    old_reply = find_exact_reply(user_id, user_message)
-    if old_reply:
-        return jsonify({"response": old_reply})
+        # Check database for exact match
+        old_reply = find_exact_reply(user_id, user_message)
+        if old_reply:
+            return jsonify({"response": old_reply})
 
-    # Load chat history
-    recent_chats = get_recent_chats(user_id, limit=5)
+        # Load chat history
+        recent_chats = get_recent_chats(user_id, limit=5)
 
-    conversation_context = []
-    for old_user_message, old_bot_response in reversed(recent_chats):
-        conversation_context.append({"role": "user", "content": old_user_message})
-        conversation_context.append({"role": "assistant", "content": old_bot_response})
+        conversation_context = []
+        for old_user_message, old_bot_response in reversed(recent_chats):
+            conversation_context.append({"role": "user", "content": old_user_message})
+            conversation_context.append({"role": "assistant", "content": old_bot_response})
 
-    # ✅ ADD THIS
+    else:
+        user_id = None
+        conversation_context = []
+
+    # Load knowledge base
     knowledge = get_relevant_knowledge(user_message)
 
+    # Call OpenAI
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -213,7 +220,9 @@ def chat():
 
     bot_reply = response.choices[0].message.content
 
-    save_chat(user_id, user_message, bot_reply)
+    # Save chat ONLY if user is logged in
+    if user_id:
+        save_chat(user_id, user_message, bot_reply)
 
     return jsonify({"response": bot_reply})
 
