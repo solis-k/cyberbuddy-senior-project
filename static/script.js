@@ -189,4 +189,15 @@ function enableFreeChat() {
     input.focus();
 }
 
+async function logoutUser() {
+    const response = await fetch("/logout", {
+        method: "POST"
+    });
 
+    const data = await response.json();
+
+    console.log(data.message);
+
+    // Refresh page so UI updates
+    location.reload();
+}

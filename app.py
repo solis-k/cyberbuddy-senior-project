@@ -142,10 +142,11 @@ def login():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
+@login_required
 def logout():
     logout_user()
-    return redirect("/")
+    return jsonify({"message": "Logged out successfully"})
 
 
 @app.route("/")

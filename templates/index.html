@@ -14,6 +14,9 @@
     <h1>🤖 CyberBuddy</h1>
     <div class="top-buttons">
         <button id="loginBtn" class="nav-btn">Login</button>
+        {% if current_user.is_authenticated %}
+            <button onclick="logoutUser()">Logout</button>
+        {% endif %}
         <a href="/" class="nav-btn">Chat</a>
         <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
     </div>
