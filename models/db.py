@@ -5,16 +5,25 @@ def init_db():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
+    # Users table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
+        name TEXT,
         role TEXT DEFAULT 'user',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN name TEXT")
+    except sqlite3.OperationalError:
+        # Column already exists
+        pass
 
+    # Chat history
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS chat_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +33,7 @@ def init_db():
     )
     """)
 
+    # Quiz results
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS quiz_results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
