@@ -1,4 +1,7 @@
 import sqlite3
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 
 def init_db():

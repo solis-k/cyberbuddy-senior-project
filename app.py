@@ -303,6 +303,28 @@ def get_relevant_knowledge(user_message):
             return f.read()
     except FileNotFoundError:
         return "No additional knowledge available."
+    
+
+@app.route("/admin")
+@login_required
+def admin():
+    if current_user.role != "admin":
+        return abort(403)  # Forbidden
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    # Get users
+    cursor.execute("SELECT id, username, name, role FROM users")
+    users = cursor.fetchall()
+
+    # Get chat history
+    cursor.execute("SELECT user_message, bot_response, timestamp FROM chat_history")
+    chats = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("admin.html", users=users, chats=chats)
 
 
 if __name__ == "__main__":
