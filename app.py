@@ -13,7 +13,7 @@ from flask_login import current_user
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "dev_secret")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev_secret")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
