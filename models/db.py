@@ -1,5 +1,6 @@
 import sqlite3
 from flask_bcrypt import Bcrypt
+import os
 
 bcrypt = Bcrypt()
 
