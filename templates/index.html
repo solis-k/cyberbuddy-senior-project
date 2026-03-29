@@ -18,7 +18,7 @@
             <button onclick="logoutUser()">Logout</button>
         {% endif %}
         {% if current_user.is_authenticated and current_user.role == "admin" %}
-            <a href="/admin">Admin Dashboard</a>
+            <a href="/admin" class="nav-btn">Admin Dashboard</a>
         {% endif %}
         <a href="/" class="nav-btn">Chat</a>
         <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
