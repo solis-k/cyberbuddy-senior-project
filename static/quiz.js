@@ -179,7 +179,28 @@ function checkAnswer(selectedIndex) {
     }, 2200);
 }
 
+async function saveQuizResult() {
+    try {
+        const response = await fetch("/save_quiz_result", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                score: score,
+                total_questions: quizQuestions.length
+            })
+        });
+
+        const data = await response.json();
+        console.log("Quiz result saved:", data);
+    } catch (error) {
+        console.error("Error saving quiz result:", error);
+    }
+}
+
 function showResults() {
+    saveQuizResult();
     let message = "";
     let emoji = "";
 
