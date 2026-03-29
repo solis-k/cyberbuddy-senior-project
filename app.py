@@ -67,14 +67,14 @@ def load_user(user_id):
         user = cursor.fetchone()
     except sqlite3.OperationalError:
         cursor.execute(
-            "SELECT id, username, role FROM users WHERE id=?",
+            "SELECT id, username, name, role FROM users WHERE id=?",
             (user_id,)
         )
         user = cursor.fetchone()
         conn.close()
 
         if user:
-            return User(user[0], user[1], "", user[2])
+            return User(user[0], user[1], user[2], user[3])
         return None
 
     conn.close()
@@ -132,7 +132,7 @@ def login():
             stored_password = user[2]
 
             if bcrypt.check_password_hash(stored_password, password):
-                login_user(User(user[0], user[1], "", user[3]))
+                login_user(User(user[0], user[1], user[3], user[4]))
                 return jsonify({"success": True})
 
             return jsonify({"success": False, "error": "Wrong password"})
