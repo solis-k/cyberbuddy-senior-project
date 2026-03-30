@@ -190,14 +190,16 @@ function enableFreeChat() {
 }
 
 async function logoutUser() {
-    const response = await fetch("/logout", {
-        method: "POST"
-    });
+    try {
+        const response = await fetch("/logout", {
+            method: "POST"
+        });
 
-    const data = await response.json();
+        const data = await response.json();
+        console.log(data);
 
-    console.log(data.message);
-
-    // Refresh page so UI updates
-    location.reload();
+        window.location.href = "/";
+    } catch (error) {
+        console.error("Logout error:", error);
+    }
 }

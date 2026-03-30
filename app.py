@@ -1,9 +1,19 @@
+
 from flask import Flask, render_template, request, jsonify, redirect
 from openai import OpenAI
 import os
 import sqlite3
 from dotenv import load_dotenv
-from models.db import init_db, save_chat, find_exact_reply, get_recent_chats, save_quiz_result
+from models.db import (
+    init_db,
+    save_chat,
+    find_exact_reply,
+    get_recent_chats,
+    save_quiz_result,
+    get_all_users,
+    get_all_chat_history,
+    get_all_quiz_results
+)
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 from flask_bcrypt import Bcrypt
 
@@ -22,10 +32,6 @@ init_db()
 
 SYSTEM_PROMPT = """
 You are CyberBuddy, a fun and friendly digital buddy who helps middle school students stay safe online.
-
-Try to give short responses with follow up questions to keep the user interested.
-Always prioritize the knowledge base.
-If user asks non cybersecurity question don't answer.
 
 You explain things in simple language.
 You are positive, encouraging, and supportive.
@@ -67,14 +73,14 @@ def load_user(user_id):
         user = cursor.fetchone()
     except sqlite3.OperationalError:
         cursor.execute(
-            "SELECT id, username, name, role FROM users WHERE id=?",
+            "SELECT id, username, role FROM users WHERE id=?",
             (user_id,)
         )
         user = cursor.fetchone()
         conn.close()
 
         if user:
-            return User(user[0], user[1], user[2], user[3])
+            return User(user[0], user[1], "", user[2])
         return None
 
     conn.close()
@@ -110,9 +116,7 @@ def login():
             if not user:
                 return jsonify({"success": False, "error": "User not found"})
 
-            stored_password = user[2]
-
-            if bcrypt.check_password_hash(stored_password, password):
+            if bcrypt.check_password_hash(user[2], password):
                 login_user(User(user[0], user[1], user[3], user[4]))
                 return jsonify({"success": True})
 
@@ -129,24 +133,20 @@ def login():
             if not user:
                 return jsonify({"success": False, "error": "User not found"})
 
-            stored_password = user[2]
-
-            if bcrypt.check_password_hash(stored_password, password):
-                login_user(User(user[0], user[1], user[3], user[4]))
+            if bcrypt.check_password_hash(user[2], password):
+                login_user(User(user[0], user[1], "", user[3]))
                 return jsonify({"success": True})
 
             return jsonify({"success": False, "error": "Wrong password"})
 
     except Exception as e:
-        print("LOGIN ERROR:", e)
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/logout", methods=["POST"])
-@login_required
+@app.route("/logout")
 def logout():
     logout_user()
-    return jsonify({"message": "Logged out successfully"})
+    return redirect("/")
 
 
 @app.route("/")
@@ -158,6 +158,24 @@ def home():
 @app.route("/quiz")
 def quiz():
     return render_template("quiz.html")
+
+@app.route("/admin")
+@login_required
+def admin_dashboard():
+    # 🔒 Only admin can access
+    if current_user.role != "admin":
+        return "Access denied", 403
+
+    users = get_all_users()
+    chats = get_all_chat_history()
+    quiz_results = get_all_quiz_results()
+
+    return render_template(
+        "admin.html",
+        users=users,
+        chats=chats,
+        quiz_results=quiz_results
+    )
 
 
 @app.route("/save_quiz_result", methods=["POST"])
@@ -176,37 +194,28 @@ def save_quiz():
 
 
 @app.route("/chat", methods=["POST"])
+@login_required
 def chat():
     user_message = (request.json.get("message") or "").strip()
 
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
 
-    # Handle logged-in vs guest users
-    if current_user.is_authenticated:
-        user_id = current_user.id
+    user_id = current_user.id
 
-        # Check database for exact match
-        old_reply = find_exact_reply(user_id, user_message)
-        if old_reply:
-            return jsonify({"response": old_reply})
+    old_reply = find_exact_reply(user_id, user_message)
+    if old_reply:
+        return jsonify({"response": old_reply})
 
-        # Load chat history
-        recent_chats = get_recent_chats(user_id, limit=5)
+    recent_chats = get_recent_chats(user_id, limit=5)
 
-        conversation_context = []
-        for old_user_message, old_bot_response in reversed(recent_chats):
-            conversation_context.append({"role": "user", "content": old_user_message})
-            conversation_context.append({"role": "assistant", "content": old_bot_response})
+    conversation_context = []
+    for old_user_message, old_bot_response in reversed(recent_chats):
+        conversation_context.append({"role": "user", "content": old_user_message})
+        conversation_context.append({"role": "assistant", "content": old_bot_response})
 
-    else:
-        user_id = None
-        conversation_context = []
-
-    # Load knowledge base
     knowledge = get_relevant_knowledge(user_message)
 
-    # Call OpenAI
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -221,9 +230,7 @@ def chat():
 
     bot_reply = response.choices[0].message.content
 
-    # Save chat ONLY if user is logged in
-    if user_id:
-        save_chat(user_id, user_message, bot_reply)
+    save_chat(user_id, user_message, bot_reply)
 
     return jsonify({"response": bot_reply})
 
@@ -232,15 +239,9 @@ def chat():
 def register():
     data = request.get_json()
 
-    if not data:
-        return jsonify({"success": False, "error": "No data"}), 400
-
     username = data.get("username")
     password = data.get("password")
     name = data.get("name", "")
-
-    if not username or not password:
-        return jsonify({"success": False, "error": "Username and password are required"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
@@ -248,20 +249,19 @@ def register():
     cursor = conn.cursor()
 
     try:
-        try:
-            cursor.execute(
-                "INSERT INTO users (username, password, name) VALUES (?, ?, ?)",
-                (username, hashed_password, name)
-            )
-        except sqlite3.OperationalError:
-            cursor.execute(
-                "INSERT INTO users (username, password) VALUES (?, ?)",
-                (username, hashed_password)
-            )
-
+        cursor.execute(
+            "INSERT INTO users (username, password, name) VALUES (?, ?, ?)",
+            (username, hashed_password, name)
+        )
         conn.commit()
         user_id = cursor.lastrowid
-
+    except sqlite3.OperationalError:
+        cursor.execute(
+            "INSERT INTO users (username, password) VALUES (?, ?)",
+            (username, hashed_password)
+        )
+        conn.commit()
+        user_id = cursor.lastrowid
     except sqlite3.IntegrityError:
         conn.close()
         return jsonify({"success": False, "error": "Username already exists"})
@@ -270,7 +270,8 @@ def register():
 
     login_user(User(user_id, username, name, "user"))
     return jsonify({"success": True})
-  
+
+
 def get_relevant_knowledge(user_message):
     user_message = user_message.lower()
 
@@ -298,33 +299,8 @@ def get_relevant_knowledge(user_message):
     else:
         file = "knowledge_base/browsing.txt"
 
-    try:
-        with open(file, "r", encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        return "No additional knowledge available."
-    
-
-@app.route("/admin")
-@login_required
-def admin():
-    if current_user.role != "admin":
-        return abort(403)  # Forbidden
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    # Get users
-    cursor.execute("SELECT id, username, name, role FROM users")
-    users = cursor.fetchall()
-
-    # Get chat history
-    cursor.execute("SELECT user_message, bot_response, timestamp FROM chat_history")
-    chats = cursor.fetchall()
-
-    conn.close()
-
-    return render_template("admin.html", users=users, chats=chats)
+    with open(file, "r", encoding="utf-8") as f:
+        return f.read()
 
 
 if __name__ == "__main__":
