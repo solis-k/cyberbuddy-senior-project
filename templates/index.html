@@ -4,88 +4,147 @@
     <title>CyberBuddy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body data-username="{{ username }}">
 
+    <div class="background">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
 
-<div class="container">
-    <h1>🤖 CyberBuddy</h1>
-    <div class="top-buttons">
-        <button id="loginBtn" class="nav-btn">Login</button>
-        {% if current_user.is_authenticated %}
-            <button onclick="logoutUser()">Logout</button>
-        {% endif %}
-        {% if current_user.is_authenticated and current_user.role == "admin" %}
-            <a href="/admin" class="nav-btn">Admin Dashboard</a>
-        {% endif %}
-        <a href="/" class="nav-btn">Chat</a>
-        <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
+        <div class="floating-emoji emoji1">⭐</div>
+        <div class="floating-emoji emoji2">🚀</div>
+        <div class="floating-emoji emoji3">🛡️</div>
     </div>
-    <div class="tagline">Your fun digital buddy for staying safe online! 🛡✨</div>
 
-    <div id="chatbox" class="chatbox">
-
-        {% if name %}
-            <div class="bot">
-                <div class="bubble">
-                    👋 Hi {{ name }}! What would you like to learn today?
-                </div>
-            </div>
-        {% else %}
-            <div class="bot">
-                <div class="bubble">
-                    👋 Hi there! I'm CyberBuddy 🤖  
-                    What would you like to learn today?
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="topic-buttons">
-            <button onclick="selectTopic('phishing')" data-tooltip="Phishing tricks people. Watch out for fake emails!">🎣 Phishing</button>
-            <button onclick="selectTopic('passwords')" data-tooltip="Keep your passwords strong and unique!">🔑 Password Safety</button>
-            <button onclick="selectTopic('viruses')" data-tooltip="Protect yourself from malicious software!">🦠 Virus Protection</button>
-            <button onclick="selectTopic('social')" data-tooltip="Stay safe on social media!">📱 Social Media Safety</button>
-            <button onclick="selectTopic('data')" data-tooltip="Protect your personal information!">🔒 Data Privacy</button>
-            <button onclick="selectTopic('ai')" data-tooltip="Understand how AI works and how to use it safely and wisely!">🤖 AI Safety</button>
-            <button onclick="enableFreeChat()" data-tooltip="Ask me anything about online safety!">💬 Ask My Own Question</button>
+    <section class="hero">
+        <div class="hero-nav">
+            <button id="loginBtn" class="nav-btn">Login</button>
+            <a href="/" class="nav-btn">Chat</a>
+            <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
         </div>
 
+        <div class="mascot">
+            <div class="mascot-character">
+                <div class="mascot-face">
+                    <div class="eyes">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    <div class="smile"></div>
+                    <div class="antenna">
+                        <div class="antenna-bulb"></div>
+                    </div>
+                </div>
+
+                <div class="mascot-icons">
+                    <div class="icon icon-zap">⚡</div>
+                    <div class="icon icon-shield">🛡️</div>
+                    <div class="icon icon-sparkles">✨</div>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="hero-title">CyberBuddy</h1>
+        <p class="hero-subtitle">Your AI Bestie for Online Safety! 🎉</p>
+        <p class="hero-description">
+            Learn to dodge hackers, spot scams &amp; protect your stuff through
+            <span class="highlight yellow">epic chats</span>,
+            <span class="highlight cyan">real scenarios</span> &amp;
+            <span class="highlight pink">fun quizzes!</span> 🚀
+        </p>
+
+        <button class="hero-cta" onclick="document.getElementById('userInput').focus()">
+            🚀 Let’s Go! 🎮
+        </button>
+    </section>
+
+    <section class="features-section">
+        <div class="features-title">Why CyberBuddy is AWESOME 🔥</div>
+        <div class="features-subtitle">No more boring safety lectures. We made learning actually fun.</div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon pink">💬</div>
+                <h3>Chat Like a Friend</h3>
+                <p>No boring textbooks. Just chill conversations about staying safe online.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon purple">🎮</div>
+                <h3>Play &amp; Learn</h3>
+                <p>Practice smart choices and build cyber confidence step by step.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon orange">⚡</div>
+                <h3>Quiz Battles</h3>
+                <p>Challenge yourself with quick quizzes and become a cyber champion.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-content">
+
+        <div class="welcome-box">
+            {% if name %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hey {{ name }}! Ready to level up your cyber skills today?
+                    </div>
+                </div>
+            {% else %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hi there! I’m CyberBuddy 🤖<br>
+                        What would you like to learn today?
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="topics-panel">
+            <h2>Unlock Your Powers! 💪</h2>
+            <p>Pick a topic below or ask your own question.</p>
+
+            <div class="topic-buttons">
+                <button onclick="selectTopic('phishing')" data-tooltip="Watch out for fake emails and scam links!">🎣 Scam Spotter</button>
+                <button onclick="selectTopic('passwords')" data-tooltip="Keep your passwords strong and unique!">🔐 Password Boss</button>
+                <button onclick="selectTopic('viruses')" data-tooltip="Protect yourself from malware and viruses!">🦠 Virus Shield</button>
+                <button onclick="selectTopic('social')" data-tooltip="Stay safe while using social media!">📱 Social Shield</button>
+                <button onclick="selectTopic('data')" data-tooltip="Protect your personal information online!">🛡️ Privacy Ninja</button>
+                <button onclick="selectTopic('ai')" data-tooltip="Learn how to use AI safely and wisely!">🤖 AI Smart</button>
+                <button onclick="enableFreeChat()" data-tooltip="Ask me anything about online safety!">💬 Ask Anything</button>
+            </div>
+        </div>
+
+        <div id="chatbox" class="chatbox"></div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
 
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Ask me how to stay safe online! 😊">
-        <button onclick="sendMessage()">Send</button>
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span id="closeLogin" class="close-x">&times;</span>
+
+            <h2>Login</h2>
+            <input id="username" placeholder="Username">
+            <input id="password" type="password" placeholder="Password">
+            <button onclick="loginUser()">Login</button>
+
+            <h2>Create Account</h2>
+            <input id="registerName" placeholder="Your Name">
+            <input id="registerUsername" placeholder="Username">
+            <input id="registerPassword" type="password" placeholder="Password">
+            <button onclick="registerUser()">Create Account</button>
+        </div>
     </div>
-</div>
 
-<div id="loginModal" class="modal">
-
-  <div class="modal-content">
-    <span id="closeLogin">&times;</span>
-
-    <h2>Login</h2>
-
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-
-    <button onclick="loginUser()">Login</button>
-
-    <h2>Create Account</h2>
-
-    <input id="registerName" placeholder="Your Name">
-    <input id="registerUsername" placeholder="Username">
-    <input id="registerPassword" type="password" placeholder="Password">
-
-    <button onclick="registerUser()">Create Account</button>
-
-  </div>
-
-</div>
-
-
-<script src="/static/script.js"></script>
-
+    <script src="/static/script.js"></script>
 </body>
 </html>
