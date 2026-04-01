@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, jsonify, redirect, abort
-=======
-
-from flask import Flask, render_template, request, jsonify, redirect
->>>>>>> bc944a8b1428fd530419a38914765c46530110c2
 from openai import OpenAI
 import os
 import sqlite3
@@ -147,10 +142,11 @@ def login():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
+@login_required
 def logout():
     logout_user()
-    return redirect("/")
+    return jsonify({"success": True})
 
 
 @app.route("/")
@@ -198,7 +194,6 @@ def save_quiz():
 
 
 @app.route("/chat", methods=["POST"])
-@login_required
 def chat():
     user_message = (request.json.get("message") or "").strip()
 
