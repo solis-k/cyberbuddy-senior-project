@@ -1,3 +1,8 @@
+let responseFlow = {
+    fullText: "",
+    step: null
+};
+
 async function sendMessage(customMessage = null) {
     const inputField = document.getElementById("userInput");
 
@@ -32,9 +37,16 @@ async function sendMessage(customMessage = null) {
 
     document.getElementById("typing").remove();
 
+    // Save full response
+    responseFlow.fullText = data.response;
+    responseFlow.step = "definition";
+
+    // Take only first 1–2 sentences
+    let shortResponse = data.response.split(". ").slice(0, 2).join(". ") + ".";
+
     chatbox.innerHTML += `
         <div class="bot">
-            <div class="bubble">${data.response}</div>
+            <div class="bubble">${shortResponse} Want to learn more? (yes/no)</div>
         </div>
     `;
 
