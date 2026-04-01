@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <h1>🛠 Admin Dashboard</h1>
+
+    <a href="/" class="nav-btn">⬅ Back to Chat</a>
+
+    <h2>👥 Users</h2>
+    <table border="1" style="width:100%; margin-bottom:20px;">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Role</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>💬 Chat History</h2>
+    <table border="1" style="width:100%;">
+        <tr>
+            <th>User Message</th>
+            <th>Bot Response</th>
+            <th>Time</th>
+        </tr>
+        {% for chat in chats %}
+        <tr>
+            <td>{{ chat[0] }}</td>
+            <td>{{ chat[1] }}</td>
+            <td>{{ chat[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>📊 Quiz Results</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Score</th>
+        <th>Total</th>
+        <th>Date</th>
+    </tr>
+    {% for result in quiz_results %}
+    <tr>
+        <td>{{ result[0] }}</td>
+        <td>{{ result[1] }}</td>
+        <td>{{ result[2] }}</td>
+        <td>{{ result[3] }}</td>
+        <td>{{ result[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+</body>
+</html>

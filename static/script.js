@@ -201,4 +201,17 @@ function enableFreeChat() {
     input.focus();
 }
 
+async function logoutUser() {
+    try {
+        const response = await fetch("/logout", {
+            method: "POST"
+        });
 
+        const data = await response.json();
+        console.log(data);
+
+        window.location.href = "/";
+    } catch (error) {
+        console.error("Logout error:", error);
+    }
+}

@@ -1,20 +1,33 @@
 import sqlite3
+from flask_bcrypt import Bcrypt
+import os
+
+bcrypt = Bcrypt()
 
 
 def init_db():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
+    # Users table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
+        name TEXT,
         role TEXT DEFAULT 'user',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN name TEXT")
+    except sqlite3.OperationalError:
+        # Column already exists
+        pass
 
+    # Chat history
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS chat_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +37,7 @@ def init_db():
     )
     """)
 
+    # Quiz results
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS quiz_results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,6 +48,27 @@ def init_db():
         FOREIGN KEY (user_id) REFERENCES users(id)
     )
     """)
+
+    admin_username = os.getenv("ADMIN_USERNAME")
+    admin_password = os.getenv("ADMIN_PASSWORD")
+    admin_name = os.getenv("ADMIN_NAME", "Admin")
+
+    if admin_username and admin_password:
+        cursor.execute("SELECT * FROM users WHERE username=?", (admin_username,))
+        existing_admin = cursor.fetchone()
+
+        if not existing_admin:
+            from flask_bcrypt import Bcrypt
+            bcrypt = Bcrypt()
+
+            hashed_pw = bcrypt.generate_password_hash(admin_password).decode("utf-8")
+
+            cursor.execute("""
+                INSERT INTO users (username, password, name, role)
+                VALUES (?, ?, ?, ?)
+            """, (admin_username, hashed_pw, admin_name, "admin"))
+
+            print("✅ Admin account created")
 
     conn.commit()
     conn.close()
@@ -115,3 +150,47 @@ def save_quiz_result(user_id, score, total_questions):
 
     conn.commit()
     conn.close()
+
+
+def get_all_users():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, username, name, role FROM users ORDER BY id DESC")
+    rows = cursor.fetchall()
+
+    conn.close()
+    return rows
+
+
+def get_all_chat_history(limit=100):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT user_message, bot_response, timestamp
+    FROM chat_history
+    ORDER BY timestamp DESC
+    LIMIT ?
+    """, (limit,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
+
+def get_all_quiz_results():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT quiz_results.id, users.username, quiz_results.score, quiz_results.total_questions, quiz_results.taken_at
+    FROM quiz_results
+    JOIN users ON quiz_results.user_id = users.id
+    ORDER BY quiz_results.taken_at DESC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
