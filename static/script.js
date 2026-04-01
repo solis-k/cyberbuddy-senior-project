@@ -215,3 +215,23 @@ async function logoutUser() {
         console.error("Logout error:", error);
     }
 }
+
+async function deleteUser(userId) {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    await fetch(`/delete_user/${userId}`, {
+        method: "POST"
+    });
+
+    location.reload();
+}
+
+async function clearChats() {
+    if (!confirm("Delete ALL chat history?")) return;
+
+    await fetch("/clear_chats", {
+        method: "POST"
+    });
+
+    location.reload();
+}

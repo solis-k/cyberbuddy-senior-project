@@ -304,6 +304,36 @@ def get_relevant_knowledge(user_message):
 
     with open(file, "r", encoding="utf-8") as f:
         return f.read()
+    
+@app.route("/delete_user/<int:user_id>", methods=["POST"])
+@login_required
+def delete_user(user_id):
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM users WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+@app.route("/clear_chats", methods=["POST"])
+@login_required
+def clear_chats():
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM chat_history")
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
 
 
 if __name__ == "__main__":

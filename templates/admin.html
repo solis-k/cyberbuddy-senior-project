@@ -7,29 +7,38 @@
 <body>
 
 <div class="container">
-    <h1>🛠 Admin Dashboard</h1>
+    <h1>Admin Dashboard</h1>
 
     <a href="/" class="nav-btn">⬅ Back to Chat</a>
 
-    <h2>👥 Users</h2>
+    <h2>Users</h2>
     <table border="1" style="width:100%; margin-bottom:20px;">
         <tr>
             <th>ID</th>
             <th>Username</th>
             <th>Name</th>
             <th>Role</th>
+            <th>Action</th> <!-- NEW -->
         </tr>
+
         {% for user in users %}
         <tr>
             <td>{{ user[0] }}</td>
             <td>{{ user[1] }}</td>
             <td>{{ user[2] }}</td>
             <td>{{ user[3] }}</td>
+            <td>
+                {% if user[3] != "admin" %}
+                    <button onclick="deleteUser({{ user[0] }})">Delete</button>
+                {% else %}
+                    <span>Protected</span>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
 
-    <h2>💬 Chat History</h2>
+    <h2>Chat History</h2>
     <table border="1" style="width:100%;">
         <tr>
             <th>User Message</th>
@@ -44,8 +53,9 @@
         </tr>
         {% endfor %}
     </table>
+    <button onclick="clearChats()">Clear Chat History</button>
 
-    <h2>📊 Quiz Results</h2>
+    <h2>Quiz Results</h2>
 <table>
     <tr>
         <th>ID</th>
