@@ -21,7 +21,16 @@
 
     <section class="hero">
         <div class="hero-nav">
-            <button id="loginBtn" class="nav-btn">Login</button>
+            {% if current_user.is_authenticated %}
+                <button onclick="logoutUser()" class="nav-btn">Logout</button>
+
+                {% if current_user.role == "admin" %}
+                    <a href="/admin" class="nav-btn">🛠 Admin Panel</a>
+                {% endif %}
+
+            {% else %}
+                <button id="loginBtn" class="nav-btn">Login</button>
+            {% endif %}
             <a href="/" class="nav-btn">Chat</a>
             <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
         </div>
