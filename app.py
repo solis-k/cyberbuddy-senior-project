@@ -151,8 +151,12 @@ def logout():
 
 @app.route("/")
 def home():
-    name = current_user.name if current_user.is_authenticated else None
-    return render_template("index.html", name=name)
+    if current_user.is_authenticated:
+        display_name = "Admin" if current_user.role == "admin" else current_user.name
+    else:
+        display_name = None
+
+    return render_template("index.html", name=display_name)
 
 
 @app.route("/quiz")
