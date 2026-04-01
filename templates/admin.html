@@ -29,6 +29,7 @@
             <td>{{ user[3] }}</td>
             <td>
                 {% if user[3] != "admin" %}
+                    <button onclick="promoteUser({{ user[0] }})">Promote</button>
                     <button onclick="deleteUser({{ user[0] }})">Delete</button>
                 {% else %}
                     <span>Protected</span>

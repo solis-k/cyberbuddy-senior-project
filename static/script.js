@@ -235,3 +235,8 @@ async function clearChats() {
 
     location.reload();
 }
+
+async function promoteUser(userId) {
+    await fetch(`/promote_user/${userId}`, { method: "POST" });
+    location.reload();
+}

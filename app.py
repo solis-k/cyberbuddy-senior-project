@@ -335,6 +335,21 @@ def clear_chats():
 
     return jsonify({"success": True})
 
+@app.route("/promote_user/<int:user_id>", methods=["POST"])
+@login_required
+def promote_user(user_id):
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE users SET role='admin' WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
