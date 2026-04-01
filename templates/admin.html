@@ -44,6 +44,26 @@
         </tr>
         {% endfor %}
     </table>
+
+    <h2>📊 Quiz Results</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Score</th>
+        <th>Total</th>
+        <th>Date</th>
+    </tr>
+    {% for result in quiz_results %}
+    <tr>
+        <td>{{ result[0] }}</td>
+        <td>{{ result[1] }}</td>
+        <td>{{ result[2] }}</td>
+        <td>{{ result[3] }}</td>
+        <td>{{ result[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
 </div>
 
 </body>

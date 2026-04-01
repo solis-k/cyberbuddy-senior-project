@@ -150,3 +150,47 @@ def save_quiz_result(user_id, score, total_questions):
 
     conn.commit()
     conn.close()
+
+
+def get_all_users():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, username, name, role FROM users ORDER BY id DESC")
+    rows = cursor.fetchall()
+
+    conn.close()
+    return rows
+
+
+def get_all_chat_history(limit=100):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT user_message, bot_response, timestamp
+    FROM chat_history
+    ORDER BY timestamp DESC
+    LIMIT ?
+    """, (limit,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
+
+def get_all_quiz_results():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT quiz_results.id, users.username, quiz_results.score, quiz_results.total_questions, quiz_results.taken_at
+    FROM quiz_results
+    JOIN users ON quiz_results.user_id = users.id
+    ORDER BY quiz_results.taken_at DESC
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows
