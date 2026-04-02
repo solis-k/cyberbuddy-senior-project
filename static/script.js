@@ -217,9 +217,17 @@ async function logoutUser() {
 }
 
 async function deleteUser(userId) {
-    if (!confirm("Are you sure you want to delete this user?")) return;
+    if (!confirm("Are you sure?")) return;
 
     await fetch(`/delete_user/${userId}`, {
+        method: "POST"
+    });
+
+    location.reload();
+}
+
+async function promoteUser(userId) {
+    await fetch(`/promote_user/${userId}`, {
         method: "POST"
     });
 
@@ -236,8 +244,5 @@ async function clearChats() {
     location.reload();
 }
 
-async function promoteUser(userId) {
-    await fetch(`/promote_user/${userId}`, { method: "POST" });
-    location.reload();
-}
+
 
