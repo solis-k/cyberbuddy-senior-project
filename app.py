@@ -228,7 +228,12 @@ def chat():
 
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
-
+        
+    user_message_lower = user_message.lower()
+    
+    if user_message_lower in ["no", "nope", "nah"]:
+        return jsonify({"response": "No problem! Ask me something else 😊"})
+    
     user_id = current_user.id
 
     old_reply = find_exact_reply(user_id, user_message)
