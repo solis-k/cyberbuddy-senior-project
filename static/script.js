@@ -240,3 +240,14 @@ async function promoteUser(userId) {
     await fetch(`/promote_user/${userId}`, { method: "POST" });
     location.reload();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("userInput");
+
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+});
