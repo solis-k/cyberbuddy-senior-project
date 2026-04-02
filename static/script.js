@@ -46,7 +46,7 @@ async function sendMessage(customMessage = null) {
 
     chatbox.innerHTML += `
         <div class="bot">
-            <div class="bubble">${shortResponse}</div>
+            <div class="bubble">${shortResponse}Want to learn more?</div>
         </div>
     `;
 
