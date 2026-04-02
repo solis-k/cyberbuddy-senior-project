@@ -241,13 +241,3 @@ async function promoteUser(userId) {
     location.reload();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("userInput");
-
-    input.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-});
