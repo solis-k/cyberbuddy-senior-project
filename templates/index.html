@@ -97,22 +97,6 @@
 
     <div class="main-content">
 
-        <div class="welcome-box">
-            {% if name %}
-                <div class="bot">
-                    <div class="bubble">
-                        👋 Hey {{ name }}! Ready to level up your cyber skills today?
-                    </div>
-                </div>
-            {% else %}
-                <div class="bot">
-                    <div class="bubble">
-                        👋 Hi there! I’m CyberBuddy 🤖<br>
-                        What would you like to learn today?
-                    </div>
-                </div>
-            {% endif %}
-        </div>
 
         <div class="topics-panel">
             <h2>Unlock Your Powers! 💪</h2>
@@ -129,6 +113,23 @@
             </div>
         </div>
 
+        <div class="welcome-box">
+            {% if name %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hey {{ name }}! Ready to level up your cyber skills today?
+                    </div>
+                </div>
+            {% else %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hi there! I’m CyberBuddy 🤖<br>
+                        What would you like to learn today?
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
         <div id="chatbox" class="chatbox"></div>
 
         <div class="input-area">
