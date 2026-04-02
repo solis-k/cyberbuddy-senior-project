@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify, redirect, abort
 from openai import OpenAI
-from flask import session
 import os
 import sqlite3
 from dotenv import load_dotenv
@@ -240,30 +239,6 @@ def chat():
 
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
-
-    user_message_lower = user_message.lower()
-    
-    flow = session.get("flow_step", "start")
-
-    if user_message_lower in ["no", "nope", "nah"]:
-        session["flow_step"] = "start"
-        return jsonify({"response": "No problem! Ask me something else 😊"})
-        
-    if user_message_lower in ["yes", "yeah", "yep"] and flow == "start":
-        session["flow_step"] = "examples"
-        return jsonify({
-            "response": "Here are 3 examples:\n- Example 1\n- Example 2\n- Example 3\n\nDo you want tips? (yes/no)"
-        })
-
-    if user_message_lower in ["yes", "yeah", "yep"] and flow == "examples":
-        session["flow_step"] = "tip"
-        return jsonify({
-            "response": "Here’s one tip: Always use strong, unique passwords.\n\nAsk me something else!"
-        })
-        
-    if flow == "tip":
-        session["flow_step"] = "start"
-        return jsonify({"response": "Ask me something else!"})
 
     user_id = current_user.id
 
