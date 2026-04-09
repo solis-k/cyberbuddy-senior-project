@@ -1,3 +1,8 @@
+let responseFlow = {
+    fullText: "",
+    step: null
+};
+
 async function sendMessage(customMessage = null) {
     const inputField = document.getElementById("userInput");
 
@@ -32,9 +37,16 @@ async function sendMessage(customMessage = null) {
 
     document.getElementById("typing").remove();
 
+    // Save full response
+    responseFlow.fullText = data.response;
+    responseFlow.step = "definition";
+
+    // Take only first 1–2 sentences
+    let shortResponse = data.response.split(". ").slice(0, 2).join(". ") + ".";
+
     chatbox.innerHTML += `
         <div class="bot">
-            <div class="bubble">${data.response}</div>
+            <div class="bubble">${shortResponse}Want to learn more?</div>
         </div>
     `;
 
@@ -203,3 +215,34 @@ async function logoutUser() {
         console.error("Logout error:", error);
     }
 }
+
+async function deleteUser(userId) {
+    if (!confirm("Are you sure?")) return;
+
+    await fetch(`/delete_user/${userId}`, {
+        method: "POST"
+    });
+
+    location.reload();
+}
+
+async function promoteUser(userId) {
+    await fetch(`/promote_user/${userId}`, {
+        method: "POST"
+    });
+
+    location.reload();
+}
+
+async function clearChats() {
+    if (!confirm("Delete ALL chat history?")) return;
+
+    await fetch("/clear_chats", {
+        method: "POST"
+    });
+
+    location.reload();
+}
+
+
+

@@ -1,5 +1,4 @@
-
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect, abort
 from openai import OpenAI
 import os
 import sqlite3
@@ -34,18 +33,54 @@ init_db()
 SYSTEM_PROMPT = """
 You are CyberBuddy, a fun and friendly digital buddy who helps middle school students stay safe online.
 
-You explain things in simple language.
-You are positive, encouraging, and supportive.
-You use light emojis when appropriate.
-You focus only on safe, defensive cybersecurity topics.
-You never provide harmful or hacking instructions.
-You provide guidance on:
-- Phishing detection
-- Password security
-- Network security basics
-- Ethical hacking concepts
-- Cyber hygiene best practices
+PERSONALITY:
+- You explain things in simple language.
+- You are positive, encouraging, and supportive.
+- You use light emojis when appropriate.
+- You focus only on safe, defensive cybersecurity topics.
+- You never provide harmful or hacking instructions.
 
+TOPICS:
+Only answer questions related to:
+- Phishing
+- Password safety
+- Virus protection
+- Social media safety
+- Data privacy
+- AI safety
+
+RESPONSE RULES:
+- Always respond in SHORT answers (1–2 sentences max for definitions)
+- Keep language simple and beginner-friendly
+- Do NOT give long paragraphs
+
+CONVERSATION FLOW:
+1. FIRST RESPONSE:
+- Give a short definition (1–2 sentences max)
+- Then ask: "Do you want to learn more? (yes/no)"
+
+2. IF USER SAYS "YES":
+- Give EXACTLY 3 short bullet points using "-" format
+- Then ask: "Do you want tips? (yes/no)"
+
+3. IF USER SAYS "YES" AGAIN:
+- Give EXACTLY 1 helpful tip (1–2 sentences max)
+- Then say: "Ask me something else!"
+
+4. IF USER SAYS "NO" AT ANY POINT:
+- Respond ONLY with: "No problem! Ask me something else 😊"
+- Do NOT continue the topic
+
+FORMATTING RULES:
+- Use "-" for bullet points (example:
+  - Point 1
+  - Point 2
+  - Point 3)
+- Keep responses short and structured
+- Do NOT combine steps
+- Do NOT skip steps
+
+Always follow the flow
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
 """
@@ -144,16 +179,21 @@ def login():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
+@login_required
 def logout():
     logout_user()
-    return redirect("/")
+    return jsonify({"success": True})
 
 
 @app.route("/")
 def home():
-    name = current_user.name if current_user.is_authenticated else None
-    return render_template("index.html", name=name)
+    if current_user.is_authenticated:
+        display_name = "Admin" if current_user.role == "admin" else current_user.name
+    else:
+        display_name = None
+
+    return render_template("index.html", name=display_name)
 
 
 @app.route("/quiz")
@@ -200,7 +240,6 @@ def save_quiz():
 
 
 @app.route("/chat", methods=["POST"])
-@login_required
 def chat():
     user_message = (request.json.get("message") or "").strip()
 
@@ -307,6 +346,51 @@ def get_relevant_knowledge(user_message):
 
     with open(file, "r", encoding="utf-8") as f:
         return f.read()
+    
+@app.route("/delete_user/<int:user_id>", methods=["POST"])
+@login_required
+def delete_user(user_id):
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM users WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+@app.route("/clear_chats", methods=["POST"])
+@login_required
+def clear_chats():
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM chat_history")
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
+
+@app.route("/promote_user/<int:user_id>", methods=["POST"])
+@login_required
+def promote_user(user_id):
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE users SET role='admin' WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"success": True})
 
 
 if __name__ == "__main__":
