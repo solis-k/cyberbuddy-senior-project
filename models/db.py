@@ -194,3 +194,21 @@ def get_all_quiz_results():
     conn.close()
 
     return rows
+
+def get_quiz_leaderboard(limit=10):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT users.username, MAX(quiz_results.score) AS best_score
+    FROM quiz_results
+    JOIN users ON quiz_results.user_id = users.id
+    GROUP BY users.id, users.username
+    ORDER BY best_score DESC, users.username ASC
+    LIMIT ?
+    """, (limit,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return rows

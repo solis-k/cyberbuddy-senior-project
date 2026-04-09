@@ -120,6 +120,44 @@ const feedbackEl = document.getElementById("quizFeedback");
 const scoreDisplay = document.getElementById("scoreDisplay");
 const questionCounter = document.getElementById("questionCounter");
 const progressFill = document.getElementById("progressFill");
+const leaderboardContainer = document.getElementById("leaderboardContainer");
+
+async function loadLeaderboard() {
+    try {
+        const response = await fetch("/leaderboard-data");
+        const data = await response.json();
+
+        if (!data.leaderboard || data.leaderboard.length === 0) {
+            leaderboardContainer.innerHTML = "<p>No quiz results yet.</p>";
+            return;
+        }
+
+        let html = `
+            <table style="width:100%; text-align:left; border-collapse: collapse;">
+                <tr>
+                    <th style="padding:8px;">Rank</th>
+                    <th style="padding:8px;">Username</th>
+                    <th style="padding:8px;">Best Score</th>
+                </tr>
+        `;
+
+        data.leaderboard.forEach((entry, index) => {
+            html += `
+                <tr>
+                    <td style="padding:8px;">${index + 1}</td>
+                    <td style="padding:8px;">${entry[0]}</td>
+                    <td style="padding:8px;">${entry[1]}</td>
+                </tr>
+            `;
+        });
+
+        html += "</table>";
+        leaderboardContainer.innerHTML = html;
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        leaderboardContainer.innerHTML = "<p>Could not load leaderboard.</p>";
+    }
+}
 
 function loadQuestion() {
     const q = quizQuestions[currentQuestion];
@@ -237,3 +275,4 @@ function restartQuiz() {
 }
 
 loadQuestion();
+loadLeaderboard();
