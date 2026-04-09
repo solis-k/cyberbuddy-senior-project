@@ -11,7 +11,8 @@ from models.db import (
     save_quiz_result,
     get_all_users,
     get_all_chat_history,
-    get_all_quiz_results
+    get_all_quiz_results,
+    get_quiz_leaderboard
 )
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 from flask_bcrypt import Bcrypt
@@ -198,6 +199,11 @@ def home():
 @app.route("/quiz")
 def quiz():
     return render_template("quiz.html")
+
+@app.route("/leaderboard-data")
+def leaderboard_data():
+    leaderboard = get_quiz_leaderboard()
+    return jsonify({"leaderboard": leaderboard})
 
 @app.route("/admin")
 @login_required
