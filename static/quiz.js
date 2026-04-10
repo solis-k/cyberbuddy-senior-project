@@ -121,6 +121,7 @@ const scoreDisplay = document.getElementById("scoreDisplay");
 const questionCounter = document.getElementById("questionCounter");
 const progressFill = document.getElementById("progressFill");
 const leaderboardContainer = document.getElementById("leaderboardContainer");
+const currentUsername = document.body.dataset.username || "";
 
 async function loadLeaderboard() {
     try {
@@ -142,11 +143,15 @@ async function loadLeaderboard() {
         `;
 
         data.leaderboard.forEach((entry, index) => {
+            const username = entry[0];
+            const score = entry[1];
+            const isCurrentUser = username === currentUsername;
+
             html += `
-                <tr>
+                <tr style="${isCurrentUser ? 'background-color: #fff3cd; font-weight: bold;' : ''}">
                     <td style="padding:8px;">${index + 1}</td>
-                    <td style="padding:8px;">${entry[0]}</td>
-                    <td style="padding:8px;">${entry[1]}</td>
+                    <td style="padding:8px;">${username}${isCurrentUser ? ' ⭐' : ''}</td>
+                    <td style="padding:8px;">${score}</td>
                 </tr>
             `;
         });
@@ -239,6 +244,11 @@ async function saveQuizResult() {
 
 function showResults() {
     saveQuizResult();
+
+setTimeout(() => {
+    loadLeaderboard();
+}, 500);
+
     let message = "";
     let emoji = "";
 
