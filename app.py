@@ -246,13 +246,13 @@ def chat():
     if not user_message:
         return jsonify({"response": "Ask me something and I’ll help 😊"})
 
-    user_id = current_user.id
+    user_id = current_user.id if current_user.is_authenticated else None
 
-    old_reply = find_exact_reply(user_id, user_message)
+    old_reply = find_exact_reply(user_id, user_message) if user_id else None
     if old_reply:
         return jsonify({"response": old_reply})
 
-    recent_chats = get_recent_chats(user_id, limit=5)
+    recent_chats = get_recent_chats(user_id, limit=5) if user_id else []
 
     conversation_context = []
     for old_user_message, old_bot_response in reversed(recent_chats):
@@ -275,7 +275,8 @@ def chat():
 
     bot_reply = response.choices[0].message.content
 
-    save_chat(user_id, user_message, bot_reply)
+    if user_id:
+        save_chat(user_id, user_message, bot_reply)
 
     return jsonify({"response": bot_reply})
 
