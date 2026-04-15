@@ -141,18 +141,37 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content">
-            <span id="closeLogin" class="close-x">&times;</span>
+
+            <span class="close" id="closeLogin">&times;</span>
 
             <h2>Login</h2>
+
             <input id="username" placeholder="Username">
             <input id="password" type="password" placeholder="Password">
+
             <button onclick="loginUser()">Login</button>
+            
+            <p class="switch-text">
+                New here?
+                <span class="link-btn" onclick="switchToRegister()">Create an account</span>
+            </p>
+
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+
+            <span class="close" id="closeRegister">&times;</span>
 
             <h2>Create Account</h2>
-            <input id="registerName" placeholder="Your Name">
+
+            <input id="registerName" placeholder="Name">
             <input id="registerUsername" placeholder="Username">
             <input id="registerPassword" type="password" placeholder="Password">
+
             <button onclick="registerUser()">Create Account</button>
+
         </div>
     </div>
 
