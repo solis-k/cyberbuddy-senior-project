@@ -195,7 +195,6 @@ window.onload = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // LOGIN ENTER KEY
     ["username", "password"].forEach(id => {
         document.getElementById(id)?.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
@@ -205,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // REGISTER ENTER KEY
     ["registerName", "registerUsername", "registerPassword"].forEach(id => {
         document.getElementById(id)?.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
@@ -215,13 +213,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-});
-// Press Enter to send chat message
-document.getElementById("userInput")?.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        sendMessage();
-    }
+    document.getElementById("userInput")?.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
+
 });
 
 function selectTopic(topic) {
