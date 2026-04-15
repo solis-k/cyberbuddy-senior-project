@@ -244,5 +244,10 @@ async function clearChats() {
     location.reload();
 }
 
+function switchToRegister() {
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("registerModal").style.display = "block";
+}
+
 
 
