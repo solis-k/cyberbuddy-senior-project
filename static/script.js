@@ -193,6 +193,14 @@ window.onload = () => {
     }
 };
 
+// Press Enter to send chat message
+document.getElementById("userInput")?.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
 function selectTopic(topic) {
     let message = "";
 
