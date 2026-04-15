@@ -53,17 +53,38 @@ async function sendMessage(customMessage = null) {
     chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-const modal = document.getElementById("loginModal");
+const loginModal = document.getElementById("loginModal");
+const registerModal = document.getElementById("registerModal");
+
 const loginBtn = document.getElementById("loginBtn");
-const closeBtn = document.getElementById("closeLogin");
+const closeLogin = document.getElementById("closeLogin");
+const closeRegister = document.getElementById("closeRegister");
 
+// Open login modal
 loginBtn.onclick = () => {
-    modal.style.display = "block";
+    loginModal.style.display = "block";
 };
 
-closeBtn.onclick = () => {
-    modal.style.display = "none";
+// Close login modal
+closeLogin.onclick = () => {
+    loginModal.style.display = "none";
 };
+
+// Close register modal
+closeRegister.onclick = () => {
+    registerModal.style.display = "none";
+};
+
+// Switch between modals
+function switchToRegister() {
+    loginModal.style.display = "none";
+    registerModal.style.display = "block";
+}
+
+function switchToLogin() {
+    registerModal.style.display = "none";
+    loginModal.style.display = "block";
+}
 
 async function loginUser() {
     console.log("LOGIN CLICKED");
@@ -243,10 +264,6 @@ async function clearChats() {
     location.reload();
 }
 
-function switchToRegister() {
-    document.getElementById("loginModal").style.display = "none";
-    document.getElementById("registerModal").style.display = "block";
-}
 
 
 
