@@ -66,60 +66,46 @@ closeBtn.onclick = () => {
 };
 
 async function loginUser() {
-
     console.log("LOGIN CLICKED");
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const messageEl = document.getElementById("loginMessage");
 
-    console.log("sending login:", username, password);
+    messageEl.innerText = ""; // clear old message
 
-    const response = await fetch("/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    });
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
 
-    console.log("response received");
+        const data = await response.json();
+        console.log("server response:", data);
 
-    const data = await response.json();
-    console.log("server response:", data);
+        if (data.success) {
+            messageEl.style.color = "green";
+            messageEl.innerText = "✅ Login successful!";
 
-    if (data.success) {
-        alert("Login successful!");
-        location.reload();
-    } else {
-        alert("Login failed");
-    }
-}
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
 
-async function registerUser() {
+        } else {
+            messageEl.style.color = "red";
+            messageEl.innerText = data.error || "Login failed";
+        }
 
-    const username = document.getElementById("registerUsername").value;
-    const password = document.getElementById("registerPassword").value;
-
-    const response = await fetch("/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-        alert("Account created! You can now log in.");
-    } else {
-        alert(data.error);
+    } catch (error) {
+        console.error("Login error:", error);
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Something went wrong";
     }
 }
 
@@ -130,30 +116,43 @@ async function registerUser() {
     const username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
     const name = document.getElementById("registerName").value;
+    const messageEl = document.getElementById("registerMessage");
 
-    console.log("sending:", username, password);
+    messageEl.innerText = ""; // clear old message
 
-    const response = await fetch("/register", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        name: name,
-        username: username,
-        password: password
-        })
-    });
+    try {
+        const response = await fetch("/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                username: username,
+                password: password
+            })
+        });
 
-    console.log("response received");
+        const data = await response.json();
+        console.log("server response:", data);
 
-    const data = await response.json();
-    console.log("server response:", data);
+        if (data.success) {
+            messageEl.style.color = "green";
+            messageEl.innerText = "✅ Account created! Logging you in...";
 
-    if (data.success) {
-        alert("Account created!");
-    } else {
-        alert(data.error || "Registration failed");
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+
+        } else {
+            messageEl.style.color = "red";
+            messageEl.innerText = data.error || "Registration failed";
+        }
+
+    } catch (error) {
+        console.error("Register error:", error);
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Something went wrong";
     }
 }
 
