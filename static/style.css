@@ -583,6 +583,14 @@ button:hover {
     margin-bottom: 20px;
 }
 
+.top-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
 .quiz-status {
     display: flex;
     justify-content: space-between;
@@ -719,6 +727,32 @@ button:hover {
     color: #111;
 }
 
+/* Music button */
+.music-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 58px;
+    height: 58px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, #fbbf24, #ec4899);
+    color: white;
+    font-size: 24px;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.28);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.music-btn:hover {
+    transform: scale(1.08);
+}
+
 /* Responsive */
 @media (max-width: 960px) {
     .features-grid {
@@ -751,25 +785,4 @@ button:hover {
     .features-title {
         font-size: 2.1rem;
     }
-}
-
-.switch-text {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-.link-btn {
-    color: #007bff;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.link-btn:hover {
-    text-decoration: underline;
-}
-
-.form-message {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 500;
 }
