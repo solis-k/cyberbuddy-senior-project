@@ -120,6 +120,49 @@ const feedbackEl = document.getElementById("quizFeedback");
 const scoreDisplay = document.getElementById("scoreDisplay");
 const questionCounter = document.getElementById("questionCounter");
 const progressFill = document.getElementById("progressFill");
+const leaderboardContainer = document.getElementById("leaderboardContainer");
+const currentUsername = document.body.dataset.username || "";
+
+async function loadLeaderboard() {
+    try {
+        const response = await fetch("/leaderboard-data");
+        const data = await response.json();
+
+        if (!data.leaderboard || data.leaderboard.length === 0) {
+            leaderboardContainer.innerHTML = "<p>No quiz results yet.</p>";
+            return;
+        }
+
+        let html = `
+            <table style="width:100%; text-align:left; border-collapse: collapse;">
+                <tr>
+                    <th style="padding:8px;">Rank</th>
+                    <th style="padding:8px;">Username</th>
+                    <th style="padding:8px;">Best Score</th>
+                </tr>
+        `;
+
+        data.leaderboard.forEach((entry, index) => {
+            const username = entry[0];
+            const score = entry[1];
+            const isCurrentUser = username === currentUsername;
+
+            html += `
+                <tr style="${isCurrentUser ? 'background-color: #fff3cd; font-weight: bold;' : ''}">
+                    <td style="padding:8px;">${index + 1}</td>
+                    <td style="padding:8px;">${username}${isCurrentUser ? ' ⭐' : ''}</td>
+                    <td style="padding:8px;">${score}</td>
+                </tr>
+            `;
+        });
+
+        html += "</table>";
+        leaderboardContainer.innerHTML = html;
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        leaderboardContainer.innerHTML = "<p>Could not load leaderboard.</p>";
+    }
+}
 
 function loadQuestion() {
     const q = quizQuestions[currentQuestion];
@@ -192,7 +235,8 @@ async function saveQuizResult() {
             })
         });
 
-        await response.json();
+        const data = await response.json();
+        console.log("Quiz result saved:", data);
     } catch (error) {
         console.error("Error saving quiz result:", error);
     }
@@ -200,6 +244,11 @@ async function saveQuizResult() {
 
 function showResults() {
     saveQuizResult();
+
+setTimeout(() => {
+    loadLeaderboard();
+}, 500);
+
     let message = "";
     let emoji = "";
 
@@ -235,40 +284,5 @@ function restartQuiz() {
     loadQuestion();
 }
 
-function setupMusic() {
-    const music = document.getElementById("bgMusic");
-    const toggleBtn = document.getElementById("musicToggle");
-
-    if (!music || !toggleBtn) return;
-
-    let started = false;
-
-    const startMusic = () => {
-        if (!started) {
-            music.volume = 0.22;
-            music.play().then(() => {
-                started = true;
-                toggleBtn.textContent = "🔊";
-            }).catch(() => {});
-        }
-    };
-
-    document.body.addEventListener("click", startMusic, { once: true });
-
-    toggleBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-
-        if (music.paused) {
-            music.play().then(() => {
-                started = true;
-                toggleBtn.textContent = "🔊";
-            }).catch(() => {});
-        } else {
-            music.pause();
-            toggleBtn.textContent = "🔇";
-        }
-    });
-}
-
 loadQuestion();
-setupMusic();
+loadLeaderboard();
