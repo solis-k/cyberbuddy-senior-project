@@ -21,7 +21,17 @@
 
     <section class="hero">
         <div class="hero-nav">
-            <button id="loginBtn" class="nav-btn">Login</button>
+            {% if current_user.is_authenticated %}
+                <button onclick="logoutUser()" class="nav-btn">Logout</button>
+
+                {% if current_user.role == "admin" %}
+                    <a href="/admin" class="nav-btn">Admin Panel</a>
+                {% endif %}
+
+            {% else %}
+                <button id="loginBtn" class="nav-btn">Login</button>
+            {% endif %}
+
             <a href="/" class="nav-btn">Chat</a>
             <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
         </div>
@@ -87,22 +97,7 @@
     </section>
 
     <div class="main-content">
-        <div class="welcome-box">
-            {% if name %}
-                <div class="bot">
-                    <div class="bubble">
-                        👋 Hey {{ name }}! Ready to level up your cyber skills today?
-                    </div>
-                </div>
-            {% else %}
-                <div class="bot">
-                    <div class="bubble">
-                        👋 Hi there! I’m CyberBuddy 🤖<br>
-                        What would you like to learn today?
-                    </div>
-                </div>
-            {% endif %}
-        </div>
+
 
         <div class="topics-panel">
             <h2>Unlock Your Powers! 💪</h2>
@@ -119,6 +114,23 @@
             </div>
         </div>
 
+        <div class="welcome-box">
+            {% if name %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hey {{ name }}! Ready to level up your cyber skills today?
+                    </div>
+                </div>
+            {% else %}
+                <div class="bot">
+                    <div class="bubble">
+                        👋 Hi there! I’m CyberBuddy 🤖<br>
+                        What would you like to learn today?
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
         <div id="chatbox" class="chatbox"></div>
 
         <div class="input-area">
@@ -129,26 +141,43 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content">
-            <span id="closeLogin" class="close-x">&times;</span>
 
+            <span class="close" id="closeLogin">&times;</span>
             <h2>Login</h2>
+
+
             <input id="username" placeholder="Username">
             <input id="password" type="password" placeholder="Password">
+
             <button onclick="loginUser()">Login</button>
 
-            <h2>Create Account</h2>
-            <input id="registerName" placeholder="Your Name">
-            <input id="registerUsername" placeholder="Username">
-            <input id="registerPassword" type="password" placeholder="Password">
-            <button onclick="registerUser()">Create Account</button>
+            <p id="loginMessage" class="form-message"></p>
+            
+            <p class="switch-text">
+                New here?
+                <span class="link-btn" onclick="switchToRegister()">Create an account</span>
+            </p>
+
         </div>
     </div>
 
-    <audio id="bgMusic" loop preload="auto">
-        <source src="/static/music.mp3" type="audio/mpeg">
-    </audio>
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
 
-    <button id="musicToggle" class="music-btn" aria-label="Toggle music">🔊</button>
+            <span class="close" id="closeRegister">&times;</span>
+
+            <h2>Create Account</h2>
+
+            <input id="registerName" placeholder="Name">
+            <input id="registerUsername" placeholder="Username">
+            <input id="registerPassword" type="password" placeholder="Password">
+
+            <button onclick="registerUser()">Create Account</button>
+
+            <p id="registerMessage" class="form-message"></p>
+
+        </div>
+    </div>
 
     <script src="/static/script.js"></script>
 </body>
