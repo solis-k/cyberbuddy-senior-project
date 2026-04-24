@@ -1,4 +1,4 @@
-const quizQuestions = [
+let quizQuestions = [
     {
         question: "What makes a password strong?",
         options: [
@@ -111,6 +111,16 @@ const quizQuestions = [
     }
 ];
 
+const allQuizQuestions = quizQuestions;
+
+const quizLevels = {
+    easy: allQuizQuestions.slice(0, 3),
+    medium: allQuizQuestions.slice(3, 7),
+    hard: allQuizQuestions.slice(7, 10)
+};
+
+let selectedLevel = "";
+
 let currentQuestion = 0;
 let score = 0;
 
@@ -162,6 +172,19 @@ async function loadLeaderboard() {
         console.error("Error loading leaderboard:", error);
         leaderboardContainer.innerHTML = "<p>Could not load leaderboard.</p>";
     }
+}
+
+function startLevel(level) {
+    selectedLevel = level;
+    quizQuestions = quizLevels[level];
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("levelSelector").style.display = "none";
+    document.getElementById("quizGame").style.display = "block";
+
+    loadQuestion();
 }
 
 function loadQuestion() {
@@ -284,5 +307,4 @@ function restartQuiz() {
     loadQuestion();
 }
 
-loadQuestion();
 loadLeaderboard();
