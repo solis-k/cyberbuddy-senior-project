@@ -59,7 +59,7 @@ CONVERSATION FLOW:
 - Give a short definition (1–2 sentences max)
 - Then ask: "Do you want some examples? (yes/no)" only if user is logged in
 
-2. IF USER SAYS "YES":
+2. IF USER SAYS "YES" to examples:
 - Give EXACTLY 3 short bullet points using "-" format
 - Then ask: "Do you want tips? (yes/no)"
 
