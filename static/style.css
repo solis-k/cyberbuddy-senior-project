@@ -773,3 +773,59 @@ button:hover {
     font-size: 14px;
     font-weight: 500;
 }
+
+.level-selector {
+    background: #f9fbff;
+    padding: 30px 24px;
+    border-radius: 22px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.level-selector h2 {
+    color: #2d6cdf;
+    margin-bottom: 10px;
+}
+
+.level-subtitle {
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.level-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.level-btn {
+    min-width: 150px;
+    padding: 16px 22px;
+    border-radius: 18px;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Fredoka', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.level-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
+.level-btn.easy {
+    background: linear-gradient(135deg, #69db7c, #38d9a9);
+    color: white;
+}
+
+.level-btn.medium {
+    background: linear-gradient(135deg, #4dabf7, #6c63ff);
+    color: white;
+}
+
+.level-btn.hard {
+    background: linear-gradient(135deg, #ff6b6b, #f06595);
+    color: white;
+}
