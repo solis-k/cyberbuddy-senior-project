@@ -63,7 +63,7 @@ CONVERSATION FLOW:
 - Give EXACTLY 3 short bullet points using "-" format
 - Then ask: "Do you want a helpful tip? (yes/no)"
 
-3. IF USER SAYS "YES" to tip:
+3. IF USER SAYS "YES" AGAIN:
 - Give EXACTLY 1 helpful tip (1–2 sentences max)
 - Then say: "Ask me something else!"
 
