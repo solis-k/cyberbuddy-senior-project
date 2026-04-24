@@ -18,7 +18,19 @@
     <br>
     <br>
     <br>
+<div id="levelSelector" class="level-selector">
+    <h2>Pick Your Level 🚀</h2>
+    <p class="level-subtitle">Choose how hard you want the quiz to be.</p>
 
+    <div class="level-buttons">
+        <button class="level-btn easy" onclick="startLevel('easy')">🌟 Easy</button>
+        <button class="level-btn medium" onclick="startLevel('medium')">⚡ Medium</button>
+        <button class="level-btn hard" onclick="startLevel('hard')">🔥 Hard</button>
+    </div>
+</div>
+
+<div id="quizGame" style="display: none;">
+    
     <div class="quiz-status">
         <span id="questionCounter">Question 1 of 10</span>
         <span id="scoreDisplay">Score: 0</span>
@@ -32,6 +44,7 @@
         <h2 id="quizQuestion">Loading question...</h2>
         <div id="quizOptions" class="quiz-options"></div>
         <div id="quizFeedback" class="quiz-feedback"></div>
+    </div>
     </div>
 
     <div class="quiz-box" style="margin-top: 20px;">
