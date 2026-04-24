@@ -42,11 +42,10 @@ async function sendMessage(customMessage = null) {
     responseFlow.step = "definition";
 
     // Take only first 1–2 sentences
-    let shortResponse = data.response.split(". ").slice(0, 2).join(". ") + ".";
 
     chatbox.innerHTML += `
         <div class="bot">
-            <div class="bubble">${shortResponse}Want to learn more?</div>
+            <div class="bubble">${data.response}</div>
         </div>
     `;
 
