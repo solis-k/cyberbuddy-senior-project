@@ -83,6 +83,13 @@ FORMATTING RULES:
 Always follow the flow
 Do not provide illegal hacking instructions.
 Focus on defensive cybersecurity education.
+
+CRITICAL RULE — DO NOT CONFUSE STEPS:
+- When the user says "yes" and you just gave a definition → give EXAMPLES (3 bullet points), then ask about the tip.
+- When the user says "yes" and you just gave examples → give a TIP (1 sentence only), then say "Ask me something else!"
+- NEVER repeat the examples when asked for a tip.
+- NEVER use examples or tips from a previous topic when a new question is asked.
+
 """
 
 bcrypt = Bcrypt(app)
@@ -242,32 +249,35 @@ def save_quiz():
 @app.route("/chat", methods=["POST"])
 def chat():
     user_message = (request.json.get("message") or "").strip()
-
     if not user_message:
-        return jsonify({"response": "Ask me something and I’ll help 😊"})
+        return jsonify({"response": "Ask me something and I'll help 😊"})
 
     user_id = current_user.id if current_user.is_authenticated else None
+    
+    is_followup = user_message.lower() in ["yes", "no"]
 
-    old_reply = find_exact_reply(user_id, user_message) if user_id else None
-    if old_reply:
-        return jsonify({"response": old_reply})
-
-    recent_chats = get_recent_chats(user_id, limit=5) if user_id else []
+    if not is_followup:
+        old_reply = find_exact_reply(user_id, user_message) if user_id else None
+        if old_reply:
+            return jsonify({"response": old_reply})
 
     conversation_context = []
-    for old_user_message, old_bot_response in reversed(recent_chats):
-        conversation_context.append({"role": "user", "content": old_user_message})
-        conversation_context.append({"role": "assistant", "content": old_bot_response})
+    if is_followup and user_id:
+        recent_chats = get_recent_chats(user_id, limit=4)
+        for old_user_message, old_bot_response in reversed(recent_chats):
+            conversation_context.append({"role": "user", "content": old_user_message})
+            conversation_context.append({"role": "assistant", "content": old_bot_response})
 
-    knowledge = get_relevant_knowledge(user_message)
+    knowledge = get_relevant_knowledge(user_message) if not is_followup else ""
+
+    system_content = SYSTEM_PROMPT
+    if knowledge:
+        system_content += "\n\nUse this knowledge:\n" + knowledge
 
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT + "\n\nUse this knowledge:\n" + knowledge
-            },
+            {"role": "system", "content": system_content},
             *conversation_context,
             {"role": "user", "content": user_message}
         ]
