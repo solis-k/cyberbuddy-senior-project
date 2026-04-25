@@ -829,3 +829,23 @@ button:hover {
     background: linear-gradient(135deg, #ff6b6b, #f06595);
     color: white;
 }
+
+#muteBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #2c2f4a;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+#muteBtn:hover {
+    background: #3e4270;
+}
