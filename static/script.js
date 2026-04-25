@@ -43,6 +43,11 @@ async function sendMessage(customMessage = null) {
 
     // Take only first 1–2 sentences
 
+    const formattedResponse = data.response
+    .split("\n")
+    .map(line => line.startsWith("- ") ? `<br>• ${line.slice(2)}` : line)
+    .join("<br>");
+
     chatbox.innerHTML += `
         <div class="bot">
             <div class="bubble">${data.response}</div>
