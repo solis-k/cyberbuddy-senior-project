@@ -90,6 +90,13 @@ CRITICAL RULE — DO NOT CONFUSE STEPS:
 - NEVER repeat the examples when asked for a tip.
 - NEVER use examples or tips from a previous topic when a new question is asked.
 
+OFF-TOPIC RULE:
+- If the user asks ANYTHING not related to: phishing, password safety, virus/malware protection, social media safety, data privacy, or AI safety — do NOT answer it.
+- Instead, respond ONLY with: "I can only help with cybersecurity topics! 🔒 Try asking me about passwords, phishing, safe browsing, social media safety, malware, or AI safety."
+- Do NOT answer the question even partially before redirecting.
+- Do NOT say things like "France is a country... but let's talk about cybersecurity."
+- This applies to geography, math, history, celebrities, or ANY non-cybersecurity topic.
+
 """
 
 bcrypt = Bcrypt(app)
