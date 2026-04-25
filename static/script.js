@@ -297,6 +297,24 @@ async function clearChats() {
     location.reload();
 }
 
+function toggleMute() {
+    const music = document.getElementById("bgMusic");
+    const btn = document.getElementById("muteBtn");
+
+    if (music.paused) {
+        music.play();
+        btn.textContent = "🔊";
+    } else {
+        music.pause();
+        btn.textContent = "🔇";
+    }
+}
+
+document.addEventListener("click", function startMusic() {
+    const music = document.getElementById("bgMusic");
+    if (music.paused) music.play();
+    document.removeEventListener("click", startMusic);
+}, { once: true });
 
 
 
