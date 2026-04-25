@@ -50,7 +50,7 @@ async function sendMessage(customMessage = null) {
 
     chatbox.innerHTML += `
         <div class="bot">
-            <div class="bubble">${data.response}</div>
+            <div class="bubble">${formattedResponse}</div>
         </div>
     `;
 
