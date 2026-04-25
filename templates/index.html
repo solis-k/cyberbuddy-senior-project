@@ -181,4 +181,11 @@
 
     <script src="/static/script.js"></script>
 </body>
+
+<audio id="bgMusic" loop>
+    <source src="{{ url_for('static', filename='music.mp3.mp3') }}" type="audio/mpeg">
+</audio>
+
+<button id="muteBtn" onclick="toggleMute()">🔊</button>
+
 </html>
