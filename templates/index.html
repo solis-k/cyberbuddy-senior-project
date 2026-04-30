@@ -32,7 +32,7 @@
                 <button id="loginBtn" class="nav-btn">Login</button>
             {% endif %}
 
-            <a href="/" class="nav-btn">Chat</a>
+            <a href="#chatbox" class="nav-btn" onclick="event.preventDefault(); document.getElementById('chatbox').scrollIntoView({behavior: 'smooth'})">Chat</a>
             <a href="/quiz" class="nav-btn secondary-btn">Quiz</a>
         </div>
 
