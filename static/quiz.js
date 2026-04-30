@@ -191,9 +191,9 @@ let quizQuestions = [
 const allQuizQuestions = quizQuestions;
 
 const quizLevels = {
-    easy: allQuizQuestions.slice(0, 3),
-    medium: allQuizQuestions.slice(3, 7),
-    hard: allQuizQuestions.slice(7, 10)
+    easy: allQuizQuestions.slice(0, 10),
+    medium: allQuizQuestions.slice(10, 20),
+    hard: allQuizQuestions.slice(20, 30)
 };
 
 let selectedLevel = "";
