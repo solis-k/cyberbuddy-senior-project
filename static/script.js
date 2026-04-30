@@ -217,13 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.getElementById("userInput")?.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
 });
 
 function selectTopic(topic) {
@@ -315,6 +308,14 @@ document.addEventListener("click", function startMusic() {
     if (music.paused) music.play();
     document.removeEventListener("click", startMusic);
 }, { once: true });
+
+
+    document.getElementById("userInput")?.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+        }
+    });
 
 
 
