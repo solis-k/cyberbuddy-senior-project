@@ -1,114 +1,191 @@
 let quizQuestions = [
-    {
-        question: "What makes a password strong?",
-        options: [
-            "Your name and birthday",
-            "At least 12 characters with letters, numbers, and symbols",
-            "The word password",
-            "Your favorite color"
-        ],
-        correct: 1,
-        explanation: "Strong passwords should be long and include a mix of letters, numbers, and symbols."
-    },
-    {
-        question: "What is phishing?",
-        options: [
-            "A fun fishing game",
-            "A trick to steal your information using fake messages",
-            "A new social media app",
-            "A type of antivirus"
-        ],
-        correct: 1,
-        explanation: "Phishing is when scammers pretend to be trustworthy to steal passwords or personal information."
-    },
-    {
-        question: "Should you share your password with your best friend?",
-        options: [
-            "Yes, if they promise not to tell",
-            "No, never share passwords",
-            "Only if they really need it",
-            "Yes, if it’s just once"
-        ],
-        correct: 1,
-        explanation: "Passwords should stay private, even from friends."
-    },
-    {
-        question: "What should you do if someone you do not know sends you a friend request?",
-        options: [
-            "Accept it right away",
-            "Send them your address",
-            "Verify who they are first",
-            "Give them your number"
-        ],
-        correct: 2,
-        explanation: "Always verify unknown people before accepting requests online."
-    },
-    {
-        question: "What is a digital footprint?",
-        options: [
-            "Your shoe size online",
-            "The trail of information you leave online",
-            "A computer virus",
-            "A secret password"
-        ],
-        correct: 1,
-        explanation: "Your digital footprint is everything you post, like, and share online."
-    },
-    {
-        question: "What should you do if a pop-up says your device has a virus?",
-        options: [
-            "Click it quickly",
-            "Close the pop-up without clicking it",
-            "Enter your credit card",
-            "Download random software"
-        ],
-        correct: 1,
-        explanation: "Many virus pop-ups are fake. Close them and do not click."
-    },
-    {
-        question: "What is safe to share on social media?",
-        options: [
-            "Your home address",
-            "Your school schedule",
-            "Your hobbies without personal details",
-            "Your phone number"
-        ],
-        correct: 2,
-        explanation: "It is safer to share interests, but not personal details like address or phone number."
-    },
-    {
-        question: "What should you do if someone is being mean to you online?",
-        options: [
-            "Be mean back",
-            "Block them and tell a trusted adult",
-            "Share your password",
-            "Post their messages everywhere"
-        ],
-        correct: 1,
-        explanation: "Block the person, save evidence if needed, and tell a trusted adult."
-    },
-    {
-        question: "What does 2FA mean?",
-        options: [
-            "Two funny accounts",
-            "Extra login security using a code",
-            "A second password only",
-            "Logging in twice for fun"
-        ],
-        correct: 1,
-        explanation: "2FA adds an extra layer of security by requiring a second code."
-    },
-    {
-        question: "Is public Wi-Fi always safe?",
-        options: [
-            "Yes, always",
-            "No, it can be risky",
-            "Only on weekends",
-            "Only if it is free"
-        ],
-        correct: 1,
-        explanation: "Public Wi-Fi can be unsafe, especially for logging into important accounts."
-    }
+
+/* ===== EASY (10) ===== */
+{
+    question: "What makes a password strong?",
+    options: ["Your name", "123456", "12+ characters with symbols", "Your birthday"],
+    correct: 2,
+    explanation: "Strong passwords are long and use symbols, numbers, and letters."
+},
+{
+    question: "What is phishing?",
+    options: ["Fishing game", "Tricking you", "Virus", "App"],
+    correct: 1,
+    explanation: "Phishing tricks you into giving personal info."
+},
+{
+    question: "Should you share your password?",
+    options: ["Yes", "No", "Sometimes", "Only once"],
+    correct: 1,
+    explanation: "Never share your password."
+},
+{
+    question: "What should you do with suspicious websites?",
+    options: ["Stay", "Leave", "Enter info", "Download"],
+    correct: 1,
+    explanation: "Leave suspicious sites immediately."
+},
+{
+    question: "What does HTTPS mean?",
+    options: ["Secure site", "Game", "Fast internet", "Nothing"],
+    correct: 0,
+    explanation: "HTTPS means secure connection."
+},
+{
+    question: "Is public Wi-Fi always safe?",
+    options: ["Yes", "No", "Only weekends", "Only free"],
+    correct: 1,
+    explanation: "Public Wi-Fi can be risky."
+},
+{
+    question: "What is malware?",
+    options: ["Game", "Harmful software", "Browser", "Chat"],
+    correct: 1,
+    explanation: "Malware harms your device."
+},
+{
+    question: "What should you do with unknown links?",
+    options: ["Click", "Ignore", "Share", "Download"],
+    correct: 1,
+    explanation: "Ignore unknown links."
+},
+{
+    question: "What is safe to share?",
+    options: ["Address", "Phone", "Hobbies", "Password"],
+    correct: 2,
+    explanation: "Hobbies are safe, personal info is not."
+},
+{
+    question: "Who do you tell if something feels wrong?",
+    options: ["Nobody", "Stranger", "Trusted adult", "Friend"],
+    correct: 2,
+    explanation: "Always tell a trusted adult."
+},
+
+/* ===== MEDIUM (10) ===== */
+{
+    question: "What is a digital footprint?",
+    options: ["Shoe size", "Online data trail", "Virus", "Password"],
+    correct: 1,
+    explanation: "Everything you do online leaves a trace."
+},
+{
+    question: "What is 2FA?",
+    options: ["Two passwords", "Extra login code", "Game", "Firewall"],
+    correct: 1,
+    explanation: "Adds extra security."
+},
+{
+    question: "What should you do with pop-ups?",
+    options: ["Click", "Close", "Enter info", "Download"],
+    correct: 1,
+    explanation: "Pop-ups can be fake."
+},
+{
+    question: "What is identity theft?",
+    options: ["Game", "Stealing info", "Virus", "Wi-Fi"],
+    correct: 1,
+    explanation: "Stealing personal data."
+},
+{
+    question: "Why not reuse passwords?",
+    options: ["No reason", "All accounts at risk", "Faster", "Safer"],
+    correct: 1,
+    explanation: "One hack risks all accounts."
+},
+{
+    question: "What is social engineering?",
+    options: ["Coding", "Tricking people", "Virus", "Game"],
+    correct: 1,
+    explanation: "Attackers trick users."
+},
+{
+    question: "Safe social media practice?",
+    options: ["Public account", "Share all", "Private account", "Accept all"],
+    correct: 2,
+    explanation: "Keep accounts private."
+},
+{
+    question: "What is spyware?",
+    options: ["Game", "Tracks you", "Browser", "App"],
+    correct: 1,
+    explanation: "Spyware collects data secretly."
+},
+{
+    question: "Why check permissions?",
+    options: ["No reason", "Apps misuse data", "Speed", "Fun"],
+    correct: 1,
+    explanation: "Apps may take extra data."
+},
+{
+    question: "What is encryption?",
+    options: ["Locking data", "Deleting", "Sharing", "Copying"],
+    correct: 0,
+    explanation: "Encryption protects information."
+},
+
+/* ===== HARD (10) ===== */
+{
+    question: "Why is HTTPS safer than HTTP?",
+    options: ["Faster", "Encrypted data", "Free", "Looks better"],
+    correct: 1,
+    explanation: "HTTPS encrypts communication."
+},
+{
+    question: "What is a brute force attack?",
+    options: ["Guess passwords repeatedly", "Virus", "Firewall", "Download"],
+    correct: 0,
+    explanation: "Attackers try many passwords."
+},
+{
+    question: "What does a VPN do?",
+    options: ["Game", "Hide location", "Delete files", "Email"],
+    correct: 1,
+    explanation: "VPN hides IP and encrypts data."
+},
+{
+    question: "What is a firewall?",
+    options: ["Virus", "Blocks threats", "Game", "Browser"],
+    correct: 1,
+    explanation: "Protects network traffic."
+},
+{
+    question: "What is ransomware?",
+    options: ["Free app", "Locks data for money", "Game", "Browser"],
+    correct: 1,
+    explanation: "Demands payment to unlock files."
+},
+{
+    question: "Why avoid public Wi-Fi for banking?",
+    options: ["Slow", "Can be hacked", "Expensive", "Blocked"],
+    correct: 1,
+    explanation: "Attackers can steal data."
+},
+{
+    question: "What is a deepfake?",
+    options: ["Fake AI media", "Game", "Virus", "Password"],
+    correct: 0,
+    explanation: "AI-generated fake content."
+},
+{
+    question: "Biggest phishing red flag?",
+    options: ["Urgency", "Logo", "Politeness", "Length"],
+    correct: 0,
+    explanation: "Urgency pressures you."
+},
+{
+    question: "Why use password managers?",
+    options: ["Fun", "Store securely", "Faster typing", "Games"],
+    correct: 1,
+    explanation: "They store strong passwords safely."
+},
+{
+    question: "What is multi-layer security?",
+    options: ["One password", "Multiple protections", "None", "Wi-Fi only"],
+    correct: 1,
+    explanation: "More layers = stronger protection."
+}
+
 ];
 
 const allQuizQuestions = quizQuestions;
